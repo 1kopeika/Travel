@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recinte Modernista de Sant Pau – Interaktiver 60-Minuten Vor-Ort-Audioguide</title>
+  <!-- Google Fonts: Cormorant Garamond (Literarisch/Modernisme) & Plus Jakarta Sans (UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terracotta: {
+              50: '#fdf5f3',
+              100: '#fbe8e4',
+              500: '#c85a43',
+              600: '#b04630',
+              700: '#923624',
+              800: '#792e20',
+              900: '#4a1b13',
+            },
+            ceramic: {
+              50: '#f2f9f8',
+              100: '#ddefec',
+              200: '#bce0da',
+              500: '#3d8b80',
+              600: '#2d6e65',
+              700: '#255852',
+              800: '#1f4742',
+              900: '#193a36',
+            },
+            mosaic: {
+              100: '#fbf3dc',
+              400: '#deb352',
+              500: '#c99733',
+              600: '#a87822',
+            },
+            parchment: '#faf6f0'
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #faf6f0;
+      color: #1f1c18;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(200, 90, 67, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 85% 30%, rgba(61, 139, 128, 0.07) 0%, transparent 50%);
+    }
+
+    /* Trencadís / Modernisme Mosaik-Zierleiste */
+    .mosaic-border {
+      height: 6px;
+      background: repeating-linear-gradient(
+        90deg,
+        #b04630 0px, #b04630 24px,
+        #deb352 24px, #deb352 48px,
+        #2d6e65 48px, #2d6e65 72px,
+        #faf6f0 72px, #faf6f0 84px
+      );
+    }
+
+    /* Aktiver Vorlese-Absatz */
+    .paragraph-block {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 3px solid transparent;
+    }
+    .paragraph-block:hover {
+      background-color: rgba(201, 151, 51, 0.07);
+      border-left-color: rgba(201, 151, 51, 0.45);
+    }
+    .paragraph-block.speaking-active {
+      background-color: rgba(61, 139, 128, 0.12);
+      border-left: 4px solid #2d6e65;
+      padding-left: 1rem;
+      border-radius: 0 0.75rem 0.75rem 0;
+      box-shadow: 0 4px 20px -4px rgba(45, 110, 101, 0.12);
+    }
+
+    /* Audio Waveform Animation */
+    @keyframes eqBar {
+      0%, 100% { transform: scaleY(0.25); }
+      50% { transform: scaleY(1); }
+    }
+    .eq-bar {
+      width: 3px;
+      background-color: #deb352;
+      border-radius: 9999px;
+      transform-origin: bottom;
+      transform: scaleY(0.25);
+      transition: transform 0.2s ease;
+    }
+    .is-playing .eq-bar:nth-child(1) { animation: eqBar 0.7s infinite 0.1s; }
+    .is-playing .eq-bar:nth-child(2) { animation: eqBar 0.55s infinite 0.25s; }
+    .is-playing .eq-bar:nth-child(3) { animation: eqBar 0.8s infinite 0.05s; }
+    .is-playing .eq-bar:nth-child(4) { animation: eqBar 0.6s infinite 0.35s; }
+    .is-playing .eq-bar:nth-child(5) { animation: eqBar 0.75s infinite 0.15s; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f3ece1; }
+    ::-webkit-scrollbar-thumb { background: #c85a43; border-radius: 4px; }
+  </style>
+</head>
+<body class="font-sans antialiased pb-44 selection:bg-terracotta-500 selection:text-white">
+
+  <!-- Obere Modernisme Mosaik-Linie -->
+  <div class="mosaic-border sticky top-0 z-50"></div>
+
+  <!-- Top Navigation -->
+  <header class="sticky top-[6px] z-40 backdrop-blur-md bg-[#faf6f0]/90 border-b border-stone-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <a href="#top" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-terracotta-600 text-white flex items-center justify-center font-serif font-bold text-xl shadow-sm group-hover:bg-ceramic-600 transition-colors">
+          SP
+        </div>
+        <div>
+          <span class="text-xs uppercase tracking-widest text-terracotta-600 font-semibold block">Barcelona • UNESCO Welterbe</span>
+          <span class="font-serif text-lg font-bold text-stone-900 leading-none">Recinte Modernista de Sant Pau</span>
+        </div>
+      </a>
+
+      <!-- Schnellwahl Stationen Desktop -->
+      <nav class="hidden lg:flex items-center gap-1 text-xs font-medium text-stone-600">
+        <a href="#station-1" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">1. Vorplatz</a>
+        <a href="#station-2" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">2. Unterwelt</a>
+        <a href="#station-3" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">3. Gartenstadt</a>
+        <a href="#station-4" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">4. Sant Rafael & Gaudí</a>
+        <a href="#station-5" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">5. Sant Salvador & OPs</a>
+        <a href="#station-6" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">6. Kuppelsaal</a>
+      </nav>
+
+      <!-- Sprachwechsel & Gesamter Rundgang Starten -->
+      <div class="flex items-center gap-2">
+        <a href="dokumentation.html" class="px-3 py-1.5 rounded-full bg-stone-200/80 hover:bg-stone-300 text-stone-800 text-xs font-semibold border border-stone-300 transition">
+          📚 Doku
+        </a>
+        <a href="sant-pau-audioguide-ru.html" class="px-3 py-1.5 rounded-full bg-stone-200/80 hover:bg-stone-300 text-stone-800 text-xs font-semibold border border-stone-300 transition">
+          🇷🇺 RU (Стиль Минаева)
+        </a>
+        <button onclick="startFullTour()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <span>Rundgang starten</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section id="top" class="relative overflow-hidden pt-10 pb-16 md:py-24 border-b border-stone-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Linke Spalte: Titel & Einführung -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ceramic-100 text-ceramic-800 text-xs font-semibold tracking-wide uppercase">
+            <span class="w-2 h-2 rounded-full bg-ceramic-600 animate-pulse"></span>
+            Literarischer Vor-Ort-Audioguide • ca. 60 Minuten
+          </div>
+
+          <h1 class="font-serif text-4xl sm:text-6xl lg:text-[4rem] font-bold text-stone-900 leading-[1.08] tracking-tight">
+            Wo <span class="text-terracotta-600 italic font-normal">Schönheit</span> zur Medizin wurde.
+          </h1>
+
+          <p class="text-lg sm:text-xl text-stone-700 leading-relaxed max-w-2xl">
+            Begleiten Sie uns auf einen atmosphärischen Hörbuch-Spaziergang durch das größte Jugendstil-Ensemble der Welt. Entdecken Sie Lluís Domènech i Montaners rebellischen 45-Grad-Protest, geheime Tunnel, heilende Gewölbe und Antoni Gaudís letzte Tage.
+          </p>
+
+          <!-- Key Badges -->
+          <div class="flex flex-wrap gap-3 pt-2">
+            <div class="bg-white/80 backdrop-blur border border-stone-200/90 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+              <span class="text-2xl">🎙️</span>
+              <div>
+                <div class="text-[11px] uppercase tracking-wider text-stone-500 font-semibold">Sprecher-Profil</div>
+                <div class="text-sm font-bold text-stone-800">Tiefer Bariton (Pitch 0.82 • Rate 0.95x)</div>
+              </div>
+            </div>
+            <div class="bg-white/80 backdrop-blur border border-stone-200/90 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+              <span class="text-2xl">🏛️</span>
+              <div>
+                <div class="text-[11px] uppercase tracking-wider text-stone-500 font-semibold">Route vor Ort</div>
+                <div class="text-sm font-bold text-stone-800">6 Chronologische Stationen + 6 Anekdoten</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero CTA Buttons -->
+          <div class="pt-4 flex flex-wrap items-center gap-4">
+            <button onclick="playStation(0, 0)" class="px-7 py-4 rounded-2xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold text-base shadow-xl shadow-terracotta-600/20 flex items-center gap-3 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Station 1 jetzt anhören</span>
+            </button>
+            <a href="#audio-settings" class="px-6 py-4 rounded-2xl bg-white hover:bg-stone-100 text-stone-800 border border-stone-300 font-semibold text-base flex items-center gap-2 transition-all">
+              <svg class="w-5 h-5 text-ceramic-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+              <span>Stimme & Bariton anpassen</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Rechte Spalte: Interaktive 45-Grad-Architektur- & Routenkarte -->
+        <div class="lg:col-span-5">
+          <div class="bg-white rounded-3xl p-6 shadow-xl border border-stone-200/90 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-widest text-ceramic-600 block">Interaktiver Lageplan</span>
+                <h2 class="font-serif text-2xl font-bold text-stone-900">Der 45°-Bruch im Cerdà-Raster</h2>
+              </div>
+              <span class="text-xs bg-mosaic-100 text-mosaic-600 font-semibold px-2.5 py-1 rounded-md border border-mosaic-400/30">
+                Klickbare Stationen
+              </span>
+            </div>
+
+            <!-- SVG Karte: Eixample Raster vs. 45 Grad Sant Pau Achse + 6 Stationen -->
+            <div class="relative bg-[#f6f1e7] rounded-2xl p-4 border border-stone-200">
+              <svg viewBox="0 0 400 420" class="w-full h-auto">
+                <defs>
+                  <pattern id="cerdaGrid" width="55" height="55" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    <rect width="46" height="46" rx="6" fill="none" stroke="#d6cfc2" stroke-width="1.5" />
+                  </pattern>
+                </defs>
+                <rect width="400" height="420" fill="url(#cerdaGrid)" />
+
+                <!-- Sichtachse Avinguda de Gaudí zur Sagrada Família -->
+                <line x1="200" y1="295" x2="75" y2="405" stroke="#c99733" stroke-width="4" stroke-dasharray="6 4" />
+                <text x="115" y="382" fill="#8b6315" font-size="10" font-weight="700" transform="rotate(-41 115 382)">Avinguda de Gaudí (45°)</text>
+
+                <!-- Sagrada Família Symbol unten links -->
+                <g transform="translate(30, 368)">
+                  <rect x="0" y="10" width="54" height="32" rx="6" fill="#792e20" />
+                  <text x="27" y="25" text-anchor="middle" fill="#ffffff" font-size="8" font-weight="bold">SAGRADA</text>
+                  <text x="27" y="35" text-anchor="middle" fill="#fbd38d" font-size="8" font-weight="bold">FAMÍLIA</text>
+                </g>
+
+                <!-- Nord-Süd-ausgerichtetes Sant Pau Areal -->
+                <g transform="translate(85, 20)">
+                  <rect x="0" y="0" width="230" height="275" rx="14" fill="#e6f2ef" stroke="#2d6e65" stroke-width="2.5" />
+                  <line x1="115" y1="20" x2="115" y2="255" stroke="#2d6e65" stroke-width="1.5" stroke-dasharray="3 3" />
+                  <path d="M115 240 L115 65 L165 65" fill="none" stroke="#c85a43" stroke-width="3" stroke-opacity="0.45" />
+
+                  <!-- Pavillons Links (Frauen) & Rechts (Männer) -->
+                  <rect x="25" y="50" width="42" height="24" rx="4" fill="#d3dedb" stroke="#2d6e65" />
+                  <rect x="25" y="95" width="42" height="24" rx="4" fill="#d3dedb" stroke="#2d6e65" />
+                  <rect x="25" y="140" width="42" height="24" rx="4" fill="#d3dedb" stroke="#2d6e65" />
+
+                  <rect x="163" y="50" width="42" height="24" rx="4" fill="#d3dedb" stroke="#2d6e65" />
+                  <rect x="163" y="95" width="42" height="24" rx="4" fill="#bce0da" stroke="#2d6e65" stroke-width="2" />
+                  <rect x="163" y="140" width="42" height="24" rx="4" fill="#bce0da" stroke="#2d6e65" stroke-width="2" />
+
+                  <!-- Casa d'Operacions (Mitte) -->
+                  <rect x="92" y="105" width="46" height="30" rx="6" fill="#fbf3dc" stroke="#c99733" stroke-width="2" />
+
+                  <!-- Administrationsgebäude (Süden) -->
+                  <path d="M35 220 L195 220 L195 252 L35 252 Z" fill="#c85a43" />
+
+                  <!-- Klickbare Stations-Pins -->
+                  <g onclick="playStation(0,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="115" cy="264" r="13" fill="#b04630" stroke="#fff" stroke-width="2.5" />
+                    <text x="115" y="268" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">1</text>
+                  </g>
+                  <g onclick="playStation(1,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="82" cy="205" r="13" fill="#1f4742" stroke="#fff" stroke-width="2.5" />
+                    <text x="82" y="209" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">2</text>
+                  </g>
+                  <g onclick="playStation(2,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="115" cy="172" r="13" fill="#2d6e65" stroke="#fff" stroke-width="2.5" />
+                    <text x="115" y="176" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">3</text>
+                  </g>
+                  <g onclick="playStation(3,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="184" cy="107" r="13" fill="#b04630" stroke="#fff" stroke-width="2.5" />
+                    <text x="184" y="111" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">4</text>
+                  </g>
+                  <g onclick="playStation(4,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="148" cy="148" r="13" fill="#c99733" stroke="#fff" stroke-width="2.5" />
+                    <text x="148" y="152" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">5</text>
+                  </g>
+                  <g onclick="playStation(5,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="115" cy="234" r="13" fill="#deb352" stroke="#1f1c18" stroke-width="2" />
+                    <text x="115" y="238" text-anchor="middle" fill="#1f1c18" font-size="11" font-weight="bold">6</text>
+                  </g>
+                </g>
+
+                <!-- Nordpfeil -->
+                <g transform="translate(362, 34)">
+                  <circle cx="0" cy="0" r="16" fill="#fff" stroke="#d6cfc2" />
+                  <text x="0" y="4" text-anchor="middle" font-size="10" font-weight="bold" fill="#b04630">N ↑</text>
+                </g>
+              </svg>
+            </div>
+
+            <p class="text-xs text-stone-500 mt-3 leading-relaxed">
+              <strong>Tipp:</strong> Klicken Sie auf eine Stationsnummer (1–6) in der Karte, um direkt zur jeweiligen Hörstation zu springen und die Audio-Wiedergabe zu starten.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STIMMEN- & SYNTHESE-KONFIGURATION (Bariton-Steuerpult) -->
+  <section id="audio-settings" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+    <div class="bg-stone-900 text-stone-100 rounded-3xl p-6 sm:p-8 shadow-2xl border border-stone-700/80">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-stone-800">
+        <div>
+          <div class="inline-flex items-center gap-2 text-mosaic-400 text-xs font-bold uppercase tracking-widest mb-1">
+            <span>🎛️ Studio-Regieanweisung & Web Speech Synthesizer</span>
+          </div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">
+            Bariton-Stimmprofil (de-DE)
+          </h2>
+          <p class="text-xs sm:text-sm text-stone-400 mt-1">
+            Automatisch optimiert auf warme, sonore Erzählstimme. Bevorzugte Profile: <span class="text-stone-200 font-medium">Google Deutsch (Männlich), Microsoft Stefan, Martin, Markus</span>.
+          </p>
+        </div>
+
+        <!-- Preset Buttons -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="applyVoicePreset(0.82, 0.95)" id="preset-standard" class="px-3.5 py-2 rounded-xl bg-terracotta-600 text-white text-xs font-semibold transition cursor-pointer">
+            🎙️ Bariton Standard (Pitch 0.82 / 0.95x)
+          </button>
+          <button onclick="applyVoicePreset(0.70, 0.92)" id="preset-deep" class="px-3.5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold border border-stone-700 transition cursor-pointer">
+            🎻 Tiefer Sonor-Bariton (Pitch 0.70 / 0.92x)
+          </button>
+          <button onclick="applyVoicePreset(1.0, 1.0)" id="preset-natural" class="px-3.5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold border border-stone-700 transition cursor-pointer">
+            ⚡ Neutral (1.0 / 1.0x)
+          </button>
+        </div>
+      </div>
+
+      <!-- Regler Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-6 items-center">
+        <!-- Stimmenauswahl -->
+        <div class="sm:col-span-2">
+          <label for="voiceSelect" class="block text-xs uppercase tracking-wider text-stone-400 font-semibold mb-2">
+            Erkannte System-Stimme (Prioritäts-Sortierung)
+          </label>
+          <select id="voiceSelect" class="w-full bg-stone-800 border border-stone-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-mosaic-400">
+            <option value="">Lade deutsche Stimmen (de-DE)...</option>
+          </select>
+          <div id="voicePriorityHint" class="text-[11px] text-mosaic-400 mt-1.5">
+            Suche nach bevorzugten männlichen Bariton-Stimmen...
+          </div>
+        </div>
+
+        <!-- Pitch Slider -->
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-2">
+            <span class="text-stone-400 uppercase tracking-wider">Tonhöhe (Pitch)</span>
+            <span id="pitchValueDisplay" class="text-mosaic-400 font-mono">0.82</span>
+          </div>
+          <input id="pitchSlider" type="range" min="0.65" max="1.15" step="0.01" value="0.82"
+            oninput="updateVoiceParams()"
+            class="w-full accent-terracotta-500 cursor-pointer" />
+          <div class="flex justify-between text-[10px] text-stone-500 mt-1">
+            <span>0.70 (Tief)</span>
+            <span>0.82 (Empfohlen)</span>
+            <span>1.00</span>
+          </div>
+        </div>
+
+        <!-- Rate Slider -->
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-2">
+            <span class="text-stone-400 uppercase tracking-wider">Sprechtempo (Rate)</span>
+            <span id="rateValueDisplay" class="text-ceramic-200 font-mono">0.95x</span>
+          </div>
+          <input id="rateSlider" type="range" min="0.75" max="1.25" step="0.01" value="0.95"
+            oninput="updateVoiceParams()"
+            class="w-full accent-ceramic-500 cursor-pointer" />
+          <div class="flex justify-between text-[10px] text-stone-500 mt-1">
+            <span>0.80x</span>
+            <span>0.95x (Flanieren)</span>
+            <span>1.20x</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HAUPTBEREICH: DIE 6 CHRONOLOGISCHEN STATIONEN -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 space-y-20" id="stationsContainer">
+    <!-- Wird dynamisch aus dem Hörbuch-Skript gerendert -->
+  </main>
+
+  <!-- ÜBERSICHTSTABELLE FÜR DEN RUNDGANG -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+    <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-stone-200">
+      <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600 block mb-1">Zeit- & Routenplan</span>
+      <h2 class="font-serif text-3xl font-bold text-stone-900 mb-6">Kurz-Übersicht für Ihren Spaziergang (ca. 60 Min.)</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="border-b-2 border-stone-200 text-stone-500 uppercase text-xs">
+              <th class="py-3 pr-4">Station</th>
+              <th class="py-3 px-4">Ort im Gelände</th>
+              <th class="py-3 px-4">Schwerpunkte & Anekdote</th>
+              <th class="py-3 pl-4 text-right">Richtzeit</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-200/70 text-stone-700">
+            <tr class="hover:bg-stone-50 cursor-pointer" onclick="playStation(0,0)">
+              <td class="py-3.5 pr-4 font-bold text-terracotta-600">Station 1</td>
+              <td class="py-3.5 px-4 font-medium">Haupteingang & Vorplatz</td>
+              <td class="py-3.5 px-4">Pest 1401, Bankier Pau Gil (1896), 45°-Protest gegen Cerdà • <em>Antiseptische Mosaike</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">ca. 10 Min.</td>
+            </tr>
+            <tr class="hover:bg-stone-50 cursor-pointer" onclick="playStation(1,0)">
+              <td class="py-3.5 pr-4 font-bold text-terracotta-600">Station 2</td>
+              <td class="py-3.5 px-4 font-medium">Administration & Unterwelt</td>
+              <td class="py-3.5 px-4">&gt; 1 km Tunnelnetz, Volta Catalana, Logistik vs. Parkruhe • <em>Rollstuhl-Grand-Prix</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">ca. 9 Min.</td>
+            </tr>
+            <tr class="hover:bg-stone-50 cursor-pointer" onclick="playStation(2,0)">
+              <td class="py-3.5 pr-4 font-bold text-terracotta-600">Station 3</td>
+              <td class="py-3.5 px-4 font-medium">Gartenstadt (Außenbereich)</td>
+              <td class="py-3.5 px-4">„Schönheit heilt“, 48 geplante vs. 27 gebaute Pavillons, Heilkräuter • <em>Bitterorangen-Trick</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">ca. 11 Min.</td>
+            </tr>
+            <tr class="hover:bg-stone-50 cursor-pointer" onclick="playStation(3,0)">
+              <td class="py-3.5 pr-4 font-bold text-terracotta-600">Station 4</td>
+              <td class="py-3.5 px-4 font-medium">Pavelló de Sant Rafael</td>
+              <td class="py-3.5 px-4">Krankensaal der 1920er, runde Ecken, Pastellgewölbe • <em>Antoni Gaudís letzte Tage (1926)</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">ca. 11 Min.</td>
+            </tr>
+            <tr class="hover:bg-stone-50 cursor-pointer" onclick="playStation(4,0)">
+              <td class="py-3.5 pr-4 font-bold text-terracotta-600">Station 5</td>
+              <td class="py-3.5 px-4 font-medium">Pavelló de Sant Salvador & OP</td>
+              <td class="py-3.5 px-4">Bau 1902–1930, Finanzkrise 1913, Pere Domènech i Roura • <em>Chirurgen im Schaufenster</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">ca. 10 Min.</td>
+            </tr>
+            <tr class="hover:bg-stone-50 cursor-pointer" onclick="playStation(5,0)">
+              <td class="py-3.5 pr-4 font-bold text-terracotta-600">Station 6</td>
+              <td class="py-3.5 px-4 font-medium">Kuppelsaal & Portalblick</td>
+              <td class="py-3.5 px-4">Neubau 2009, UNESCO-Restaurierung, Avinguda de Gaudí • <em>Schatz hinter der Rigipsdecke</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">ca. 9 Min.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKY BOTTOM AUDIO PLAYER BAR -->
+  <div id="stickyPlayer" class="fixed bottom-0 inset-x-0 z-50 bg-stone-950/95 backdrop-blur-xl text-white border-t border-stone-800 shadow-2xl transition-all">
+    <div class="w-full h-1.5 bg-stone-800 cursor-pointer" onclick="seekParagraph(event)">
+      <div id="progressBar" class="h-full bg-gradient-to-r from-terracotta-500 via-mosaic-400 to-ceramic-500 transition-all duration-300" style="width: 0%"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+      
+      <!-- Aktuelle Stations-Info & Equalizer -->
+      <div class="flex items-center gap-3.5 w-full sm:w-auto justify-between sm:justify-start">
+        <div class="flex items-center gap-3">
+          <div id="eqContainer" class="w-10 h-10 rounded-xl bg-stone-800 border border-stone-700 flex items-end justify-center gap-0.5 p-2">
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+          </div>
+          <div>
+            <div id="playerStationLabel" class="text-[11px] font-bold uppercase tracking-wider text-mosaic-400">
+              Bereit zum Abspielen • Station 1 von 6
+            </div>
+            <div id="playerTitleLabel" class="text-sm font-serif font-bold text-white truncate max-w-[240px] sm:max-w-md">
+              Haupteingang & Vorplatz
+            </div>
+          </div>
+        </div>
+
+        <label class="inline-flex items-center gap-1.5 text-xs text-stone-400 cursor-pointer sm:hidden">
+          <input type="checkbox" id="autoScrollToggleMobile" checked onchange="syncAutoScroll(this.checked)" class="accent-ceramic-500 rounded">
+          <span>Mitscrollen</span>
+        </label>
+      </div>
+
+      <!-- Haupt-Bedienelemente Mitte -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="prevStation()" title="Vorherige Station" class="p-2 rounded-full text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+
+        <button onclick="prevParagraph()" title="Absatz zurück" class="p-2 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+
+        <button id="mainPlayBtn" onclick="togglePlayPause()" class="w-12 h-12 rounded-full bg-terracotta-600 hover:bg-terracotta-500 text-white flex items-center justify-center shadow-lg shadow-terracotta-600/30 transition transform active:scale-95 cursor-pointer">
+          <svg id="playIcon" class="w-6 h-6 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pauseIcon" class="w-6 h-6 fill-current hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+
+        <button onclick="stopAudio()" title="Stopp & Zurücksetzen" class="p-2 rounded-full text-stone-400 hover:text-red-400 hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+        </button>
+
+        <button onclick="nextParagraph()" title="Nächster Absatz" class="p-2 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <button onclick="nextStation()" title="Nächste Station" class="p-2 rounded-full text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+
+      <!-- Status & Auto-Scroll Rechts -->
+      <div class="hidden sm:flex items-center gap-4 text-xs text-stone-400">
+        <span id="paragraphCounter" class="font-mono bg-stone-900 px-2.5 py-1 rounded-md border border-stone-800">
+          Absatz 1 / 11
+        </span>
+        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+          <input type="checkbox" id="autoScrollToggleDesktop" checked onchange="syncAutoScroll(this.checked)" class="accent-ceramic-500 rounded">
+          <span>Text automatisch mitscrollen</span>
+        </label>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DATEN & LOGIK: VOLLSTÄNDIGES AUDIOGUIDE-SKRIPT + WEB SPEECH ENGINE -->
+  <script>
+    const stationsData = [
+      {
+        id: "station-1",
+        number: 1,
+        title: "Haupteingang & Vorplatz",
+        subtitle: "Die Pest von 1401, das Millionen-Testament von Pau Gil und der 45-Grad-Winkelprotest gegen Cerdà",
+        location: "Vorplatz am schmiedeeisernen Haupttor (Kreuzung Carrer de Cartagena / Avinguda de Gaudí)",
+        duration: "ca. 10 Min.",
+        tags: ["Ursprung 1401", "Pau Gil (1896)", "45°-Protest gegen Cerdà", "Sichtachse Sagrada Família"],
+        lookPrompt: "Bleiben Sie auf dem Vorplatz stehen, betrachten Sie zunächst den Uhrturm und das große Mosaikfries an der Hauptfassade – und drehen Sie sich im Verlauf der Erzählung zur Avinguda de Gaudí um.",
+        paragraphs: [
+          "Willkommen im Recinte Modernista de Sant Pau. Bleiben Sie ruhig noch einen Moment hier draußen auf dem Vorplatz stehen, bevor Sie die Schwelle überschreiten. Lassen Sie Ihren Blick über diese schimmernde Fassade aus rotem Backstein, glitzernden Mosaiken, spitzen Türmchen und filigranen Steinblüten wandern.",
+          "Wenn Sie nicht wüssten, wo Sie sich gerade befinden – wofür würden Sie dieses Bauwerk halten? Für ein Märchenschloss? Eine weltliche Kathedrale? Den Palast eines exzentrischen katalanischen Seefahrers? Kaum jemand, der zum ersten Mal vor diesem Portal steht, käme auf den Gedanken, dass er hier auf ein Krankenhaus blickt. Und doch stehen Sie vor einem der kühnsten medizinischen und architektonischen Experimente der Menschheitsgeschichte: einem Ort, der nicht gebaut wurde, um das Leiden hinter grauen Anstaltsmauern zu verstecken, sondern um kranke Menschen mit Licht, Luft, Duft und purer Schönheit ins Leben zurückzuholen.",
+          "Um zu verstehen, warum dieser Palast für die Armen und Kranken hier am Rande des Stadtviertels El Guinardó entstand, müssen wir die Uhr weit zurückdrehen. Sehr weit. Bis ins Jahr 1401. Damals, an der Schwelle vom 14. zum 15. Jahrhundert, war Barcelona eine verwundete Stadt. Immer wieder hatten verheerende Pestwellen die engen Gassen der mittelalterlichen Altstadt heimgesucht. Hunger, Seuchen und Elend überforderten die sechs kleinen, miteinander konkurrierenden Hospitäler der Stadt völlig. Also fassten der Consell de Cent – der historische Rat der Hundert von Barcelona – und die kirchlichen Würdenträger im Jahr 1401 einen radikalen Beschluss: Sie legten alle sechs mittelalterlichen Spitäler zu einem einzigen großen Zentralkrankenhaus zusammen. Es war die Geburtsstunde des Hospital de la Santa Creu – des Hospitals vom Heiligen Kreuz – mitten im heutigen Viertel El Raval.",
+          "Fast fünf Jahrhunderte lang diente dieser schwere, gotische Bau im Herzen der Altstadt den Kranken Barcelonas. Übrigens wurde er im 19. Jahrhundert zum ersten Mal überhaupt von deutschen Ordensschwestern betreut, den Barmherzigen Schwestern vom Heiligen Vinzenz von Paul, die man in Barcelona bis heute liebevoll Els Darders nennt. Doch Ende des 19. Jahrhunderts war das alte gotische Spital im Raval am Ende seiner Kräfte. Barcelona explodierte förmlich vor Wachstum. Die Industrielle Revolution hatte Hunderttausende Arbeiter in die Stadt gezogen, die Hygiene im düsteren, feuchten Mittelalterbau war katastrophal, die Medizin hatte Bakterien und Keime entdeckt – aber die Stadtkasse war chronisch leer.",
+          "Die Rettung kam aus Paris. Und sie trug den Namen Pau Gil i Serra. Pau Gil war 1816 in Barcelona geboren worden, hatte aber in Paris als Bankier ein gigantisches Vermögen gemacht. Als überzeugter Junggeselle und tiefgläubiger Philanthrop vergaß er seine Heimatstadt nie. Als er am 30. April 1896 in Paris starb, hinterließ er ein Testament, das in Barcelona wie ein Paukenschlag einschlug. Er verfügte, dass die Hälfte seines immensen Vermögens – mehr als drei Millionen Gold-Peseten, eine für damalige Verhältnisse astronomische Summe – für den Bau eines brandneuen, hochmodernen Krankenhauses in Barcelona verwendet werden sollte.",
+          "Doch Pau Gil, ganz der misstrauische Bankier, knüpfte sein Geschenk an eiserne Bedingungen: Erstens musste das neue Krankenhaus den Namen seines Namenspatrons tragen – des Heiligen Paulus, auf Katalanisch Sant Pau. Deshalb heißt die Institution seit der Zusammenlegung beider Stiftungen bis heute offiziell Hospital de la Santa Creu i Sant Pau. Zweitens durfte sich kein einziger Politiker oder Bürokrat der Stadtverwaltung in den Bau einmischen; ein eigenes Bankiers-Komitee aus Paris überwachte jeden Centime. Und drittens forderte das Testament ein Krankenhaus auf dem allerneuesten Stand von Wissenschaft, Hygiene und Technologie.",
+          "Wen also beauftragt man um das Jahr 1900 in Barcelona, wenn man das modernste Krankenhaus Europas bauen will? Man ruft Lluís Domènech i Montaner. Zu Lebzeiten war Domènech i Montaner der wahre Architektenfürst Barcelonas: Direktor der Architekturschule, Historiker, Politiker, Universalgelehrter und der Vater des Modernisme, des katalanischen Jugendstils. Er hatte die gläserne Musik-Schatulle des Palau de la Música Catalana entworfen – und im Jahr 1901 legte er den Masterplan für dieses Krankenhaus vor, dessen Grundstein 1902 gelegt wurde.",
+          "Und gleich zu Beginn leistete sich Domènech i Montaner einen genialen, fast schon frechen Akt des zivilen Ungehorsams in Stein. Drehen Sie sich bitte einmal kurz um – mit dem Rücken zum Krankenhaus –, und blicken Sie die mit Platanen und Jugendstilkandelabern gesäumte Promenade der Avinguda de Gaudí hinunter. Was sehen Sie am Ende dieser Allee? Genau: die hoch aufragenden Türme der Sagrada Família von Antoni Gaudí!",
+          "Und nun achten Sie einmal auf die Straßenkreuzung direkt vor Ihren Füßen. Seit 1859 wurde ganz Barcelona nach dem strengen, mathematischen Schachbrettmuster des Ingenieurs Ildefons Cerdà erweitert – dem berühmten Pla Cerdà des Stadtteils Eixample. Alles in dieser neuen Stadt musste im exakten rechten Winkel angelegt sein, alle Straßen liefen stur von Südwesten nach Nordosten oder von Nordwesten nach Südosten. Lluís Domènech i Montaner jedoch hasste diese monotone geometrische Zwangsjacke von Cerdà! Er empfand das starre Straßenraster als seelenlos und vor allem als medizinisch falsch für seine Patienten.",
+          "Also tat er etwas Unerhörtes: Er kaufte neun komplette Häuserblocks des Eixample-Rasters auf – eine riesige Fläche von über dreizehn Hektar – und drehte sein gesamtes Krankenhaus-Areal um exakt 45 Grad gegen das Straßennetz der Stadt! Dieser 45-Grad-Winkelprotest war ein dreifacher Geniestreich: Erstens sprengte er das starre Korsett von Cerdà auf und schuf diese diagonale Sichtachse direkt auf die Sagrada Família. Hier oben thront das weltliche Heiligtum der Wissenschaft – dort unten das geistliche Heiligtum des Glaubens. Zweitens war er pure Klimamedizin: Durch die Drehung um 45 Grad zeigten alle Krankenpavillons mit ihren Hauptfassaden exakt nach Süden. Das bedeutete maximale Sonneneinstrahlung von morgens bis abends, während die warmen Meeresbrisen vom Mittelmeer ungehindert diagonal durch die Gärten streichen konnten."
+        ],
+        anecdoteTitle: "Der posthume Streich gegen die Pariser Buchhalter",
+        anecdoteText: "Bevor wir hineingehen, noch eine kleine, augenzwinkernde Geschichte zu jener kunstsinnigen Fassade vor Ihnen: Die strengen Testamentsvollstrecker von Pau Gil aus Paris waren nüchterne Finanzleute. Als sie Domènech i Montaners Entwürfe sahen – mit all den Keramikmosaiken, den Engeln aus Marmor von den Bildhauern Pau Gargallo und Eusebi Arnau, den bunten Glasfenstern und Wasserspeiern –, schlugen sie die Hände über dem Kopf zusammen. „Monsieur Domènech!“, protestierten sie, „wir bezahlen ein Krankenhaus für arme Leute, kein Opernhaus! Streichen Sie diesen nutzlosen Zierrat!“ Domènech i Montaner lächelte ruhig in seinen Vollbart und zog ein medizinisches Gutachten aus der Tasche. Er erklärte den verdutzten Bankiers mit todernster wissenschaftlicher Miene: Glasierte Keramik und Mosaiksteine seien keineswegs Luxus oder Kunst, sondern hochmoderne antiseptische Oberflächenversiegelungen, an denen keine Tuberkulosebakterien haften könnten und die der Regen kostenlos abwasche. Und die bunten Farben seien ein unverzichtbares neurologisches Therapiemittel gegen Krankenhaus-Melancholie! Die Pariser Buchhalter waren schachmatt gesetzt. Sie mussten jede einzelne bunte Mosaikkachel als medizinisch-hygienische Notwendigkeit absegnen. Sie betrachten hier also die vermutlich schönste Desinfektionsmaßnahme der Architekturgeschichte!",
+        walkInstruction: "Gehen Sie nun durch den Besuchereingang hinab in das Untergeschoss zu den weiß gekachelten unterirdischen Verbindungsgängen und starten Sie dort Station 2."
+      },
+      {
+        id: "station-2",
+        number: 2,
+        title: "Administrationsgebäude & Unterwelt",
+        subtitle: "Das über 1 Kilometer lange unterirdische Tunnelsystem zur Trennung von Krankenlogistik und Parkruhe",
+        location: "Im weiß gekachelten, gewölbten unterirdischen Verbindungstunnel unterhalb des Hauptgebäudes und der Gärten",
+        duration: "ca. 9 Min.",
+        tags: ["> 1 km Tunnelnetz", "Volta Catalana", "Logistik vs. Parkruhe", "Antiseptische Fliesen"],
+        lookPrompt: "Achten Sie auf die flachen Ziegelgewölbe (Volta Catalana), die Lichtschächte zur Decke und die abgerundeten, weiß glasierten Wandfliesen.",
+        paragraphs: [
+          "Spüren Sie, wie sich die Temperatur und die Akustik mit einem Schlag verändert haben? Hier unten, unter den Wurzeln der Orangen- und Eukalyptusbäume, betreten Sie das verborgene Nervensystem von Sant Pau. Wenn Sie die gewölbten Decken aus flachen Ziegeln betrachten – das berühmte Volta Catalana, das katalanische Gewölbe – und die weiß glänzenden Wandfliesen, die das Licht der Oberlichter reflektieren, stehen Sie in einem wahren Meisterwerk der Ingenieurskunst des frühen 20. Jahrhunderts: einem über einen Kilometer langen, unterirdischen Tunnelsystem, das sämtliche Pavillons dieser Anlage unsichtbar miteinander verbindet.",
+          "Warum hat Lluís Domènech i Montaner den gigantischen Aufwand betrieben, unter einer kompletten Gartenstadt eine zweite, unterirdische Stadt auszuheben? Um das zu begreifen, müssen wir uns die Medizin um das Jahr 1900 vor Augen führen. Nach den Entdeckungen von Louis Pasteur und Robert Koch wusste man endlich: Krankheiten werden nicht durch böse Dünste, sondern durch unsichtbare Mikroorganismen übertragen. In einem großen Zentralkrankenhaus unter einem einzigen Dach bedeutete das: Wenn in Saal A der Typhus oder die Cholera ausbrach, war oft schon wenige Tage später das gesamte Gebäude infiziert.",
+          "Domènech i Montaner entschied sich daher für das sogenannte Pavillonsystem: Jede medizinische Fachrichtung – Chirurgie, Innere Medizin, Infektionskrankheiten, Geburtshilfe – bekam ein eigenes, völlig freistehendes Haus mitten im Grünen. Doch dieses System hatte in den Krankenhäusern von Paris, Berlin oder Wien einen gewaltigen Haken: Wie bringt man bei strömendem Regen, im Winterwind oder in der glühenden Mittagshitze frisch operierte Patienten von einem Haus ins andere? Wie transportiert man dampfende Suppenkessel aus der Zentralküche, schmutzige Wäsche, Medikamente oder gar Verstorbene quer über das Gelände, ohne dass die Patienten, die sich draußen im Park erholen sollen, ständig mit dem Elend, dem Lärm und der Hektik des Klinikalltags konfrontiert werden?",
+          "Domènech i Montaners Antwort war radikal – und ihrer Zeit um Jahrzehnte voraus: Er teilte die Welt von Sant Pau in Oben und Unten. Oben, unter dem blauen Himmel Barcelonas, durfte ausschließlich das Leben, die Ruhe, das Vogelgezwitscher und die Genesung herrschen. Kein klappernder Essenswagen, kein eilender Chirurg in blutverschmierter Schürze, kein weinender Trauerzug durfte jemals die friedliche Illusion eines mediterranen Schlossparks stören. Unten, genau hier, wo Sie jetzt stehen, pulsierte die unsichtbare Maschine des Krankenhauses.",
+          "Schauen Sie sich die Breite und Höhe dieser Gänge einmal genau an. Diese Tunnel wurden breit genug geplant, dass zwei Krankenbetten problemlos aneinander vorbeifahren konnten. An den Decken und in den Wänden verliefen sämtliche Versorgungsleitungen der damals modernsten Technik: Stromkabel aus dem hauseigenen Elektrizitätswerk, Dampfleitungen für die Zentralheizung, Frischwasserrohre und Telefonleitungen.",
+          "Von der großen Zentralküche, der Wäscherei, der Apotheke und der Pathologie im nördlichen Teil des Geländes rollten hier unten Tag und Nacht die Transportwagen zu den Aufzügen der einzelnen Pavillons. Selbst die Leichenhalle und der Ausgang für Bestattungen auf der Rückseite des Geländes waren über eigene unterirdische Stichgänge angebunden. Der Tod sollte in Sant Pau den Lebenden niemals über den Weg laufen. Und beachten Sie: Dank der Lichtschächte und Glasbausteine strömte selbst hier unten Tageslicht herein."
+        ],
+        anecdoteTitle: "Der heimliche „Grand Prix de Sant Pau“ um Mitternacht",
+        anecdoteText: "Wo immer Menschen unter Hochdruck zwischen Leben und Tod arbeiten, sucht sich die menschliche Natur irgendwann ein Ventil – erst recht an einem so ungewöhnlichen Ort wie diesem kilometerlangen Tunnelnetz. Als das Krankenhaus im 20. Jahrhundert im Vollbetrieb lief, wurden die langen, schnurgeraden und leicht abschüssigen Haupttunnel nämlich nicht nur von braven Schwestern mit Essenswagen genutzt. In den späten Nachtschichten, wenn oben in den Sälen die Lichter gelöscht waren, verwandelte sich der lange Hauptkorridor zwischen den hinteren Pavillons und dem Verwaltungsbau manchmal in eine heimliche Rennstrecke! Junge Assistenzärzte im Bereitschaftsdienst und übermüdete Krankenpfleger veranstalteten hier unten mit den gut geölten Rollstühlen und gummibereiften Wäschewagen regelrechte Mitternachts-Wettrennen. Weil das Gelände vom Hügel Carmel nach Süden leicht abfällt, nahmen die Gefährte auf den glatten Fliesen ein beachtliches Tempo auf! Das Ganze hatte allerdings ein gefürchtetes natürliches Bremssystem: die Darders, die strengen Ordensschwestern. Deren klappernde Rosenkränze am Gürtel wirkten im Echo der Tunnelgewölbe wie ein Frühwarnsystem. Sobald aus einem Seitentunnel das rhythmische Klick-Klack eines Rosenkranzes hallte, bremsten die nächtlichen Rennfahrer quietschend ab und taten mit unschuldigster Miene so, als würden sie gerade äußerst gewissenhaft die Spurtreue eines Rollstuhls überprüfen!",
+        walkInstruction: "Folgen Sie nun dem Gang und steigen Sie über die Treppe hinauf ins Freie auf die große Gartenterrasse zwischen den Pavillons. Starten Sie dort Station 3."
+      },
+      {
+        id: "station-3",
+        number: 3,
+        title: "Die Gartenstadt (Außenbereich)",
+        subtitle: "Das therapeutische Konzept „Schönheit heilt“, die geplanten 48 Pavillons (27 realisiert) und Heilpflanzen als Keimschutz",
+        location: "Im zentralen Parkbereich auf der großen Mittelachse zwischen den Frauen- und Männerpavillons",
+        duration: "ca. 11 Min.",
+        tags: ["Schönheit heilt", "48 geplant / 27 gebaut", "Eukalyptus, Lavendel & Rosmarin", "Freiluft-Apotheke"],
+        lookPrompt: "Schauen Sie sich im Kreis um: Betrachten Sie die bunt glasierten Keramikdächer, die Skulpturen an den Fassaden und die aromatischen Sträucher und Bäume entlang der Wege.",
+        paragraphs: [
+          "Treten Sie hinaus ins Licht – und atmen Sie einmal tief durch. Halten Sie inne und schauen Sie sich im Kreis um. Links und rechts von Ihnen erheben sich die Pavillons wie kostbare Schmuckkästchen aus warmem rotem Backstein. Auf ihren Dächern funkeln bunt glasierte Keramikschuppen in Grün, Gelb, Kobaltblau und Türkis in der katalanischen Sonne, gekrönt von schmiedeeisernen Wetterfahnen und kleinen Kuppeltürmchen.",
+          "Auf den beiden Seiten der großen Mittelpromenade wurde sogar die gesellschaftliche Ordnung des 19. Jahrhunderts in Architektur übersetzt: Wenn Sie vom Hauptgebäude nach Norden blicken, lagen auf der linken, westlichen Seite sämtliche Pavillons für die Frauen – benannt nach weiblichen Heiligen wie Santa Victòria oder der Puríssima –, während auf der rechten, östlichen Seite die Männerpavillons standen, benannt nach männlichen Heiligen wie Sant Rafael, Sant Salvador, Sant Leopold oder Sant Jordi.",
+          "Sie stehen hier mitten in Domènech i Montaners großem Lebenstraum: der Ciutat Jardí, der therapeutischen Gartenstadt. Und so überwältigend Ihnen dieses Ensemble heute auch erscheinen mag – was Sie hier vor sich sehen, ist tatsächlich nur rund die Hälfte dessen, was Domènech i Montaner ursprünglich auf dem Reißbrett entworfen hatte! Sein gigantischer Masterplan sah insgesamt 48 einzelne Pavillons vor. Jeder einzelne Patient sollte über 145 Quadratmeter rechnerische Gesamtfläche verfügen – mehr Platz und Luft pro Patient als in jedem anderen Krankenhaus der Welt! Letztlich wurden auf dem Gelände bis 1930 insgesamt 27 Bauwerke realisiert – darunter 16 im reinen Stil des Modernisme nach den Entwürfen von Lluís Domènech i Montaner und 11 weitere Pavillons im Stil der 1920er Jahre.",
+          "Doch das eigentliche Herzstück dieser Außenanlage ist die Philosophie, die aus jedem Ziegelstein und jedem Blumenbeet spricht: Schönheit heilt! Für Lluís Domènech i Montaner war ein Krankenhaus keine Reparaturwerkstatt für defekte biologische Körper. Er war tief davon überzeugt, dass ein Mensch, der krank, verängstigt und geschwächt aus einer dunklen, feuchten Mietskaserne Barcelonas ins Spital kommt, zuallererst an seiner Seele aufgerichtet werden muss.",
+          "Denken Sie daran: Die Patienten von Sant Pau waren keine reichen Aristokraten! Wohlhabende Bürger ließen sich um 1900 zu Hause von ihrem Leibarzt behandeln. Ins öffentliche Spital kamen die Hafenarbeiter, die Textilweberinnen, die Dienstmädchen, die Tagelöhner. Und genau für diese Ärmsten der Armen schuf Domènech i Montaner ein Umfeld, das schöner war als die Villen der Reichen am Passeig de Gràcia. Überall an den Fassaden sehen Sie steinerne Engel, keramische Rosen und hoffnungsvolle Inschriften – eine Erkenntnis, die die moderne Medizin heute, über hundert Jahre später, unter dem Begriff Healing Architecture wissenschaftlich neu entdeckt hat!",
+          "Aber Domènech i Montaner war nicht nur Ästhet, er war auch Naturwissenschaftler. Selbst die Bäume, Sträucher und Kräuter, an denen Sie hier vorbeigehen, wurden keineswegs zufällig gepflanzt. Dieser Park ist in Wahrheit eine lebendige botanische Freiluft-Apotheke! Hier wachsen Lavendel, Rosmarin, Thymian und Salbei in den Beeten, Zitronen- und Bitterorangenbäume entlang der Wege, Lindenbäume zur Beruhigung der Nerven und vor allem mächtige Eukalyptusbäume und Kiefern.",
+          "Warum genau diese Pflanzen? Im frühen 20. Jahrhundert gab es noch keine Antibiotika. Lungenkrankheiten wie Tuberkulose und Bronchitis waren die großen Geißeln der Großstadt. Eukalyptus, Kiefer, Rosmarin und Lavendel verströmen in der warmen Mittelmeersonne hohe Konzentrationen an ätherischen Ölen – allen voran Cineol, Kampfer und Linalool. Diese Pflanzen erfüllten eine doppelte medizinische Funktion: Erstens wirkten ihre Ausdünstungen als natürlicher Geruchs- und Keimschutz, der die gefürchteten Krankenhausgerüche nach Karbol und Äther neutralisierte und die Keimbelastung der Luft senkte. Und zweitens verwandelte sich der gesamte Park an warmen Sommertagen in ein riesiges Freiluft-Inhalatorium für die Lungenkranken auf den sonnigen Südterrassen."
+        ],
+        anecdoteTitle: "Das Geheimnis der ungenießbaren Orangen",
+        anecdoteText: "Wenn Sie im Herbst, Winter oder Frühjahr durch diese Gärten spazieren, leuchten Ihnen aus dem dichten grünen Laub überall pralle, goldgelbe Orangen entgegen. Als die ersten genesenden Patienten um 1916 und 1920 bei ihren ersten Spaziergängen im Park wieder zu Kräften kamen – viele von ihnen halb ausgehungerte Arbeiter aus den Armenvierteln –, war die Versuchung natürlich riesengroß. Sobald die Ordensschwestern einmal wegschauten, streckte so mancher Patient heimlich die Hand aus, pflückte sich eine dieser herrlich aussehenden Früchte, schälte sie hastig hinter einem Busch – und biss herzhaft hinein. Was dann folgte, war ein Gesicht, das sich so schlagartig zusammenzog wie eine Ziehharmonika! Denn die schlauen Krankenhausplaner hatten aus gutem Grund ausschließlich Pomeranzen – also wilde, extrem saure und pelzig-bittere Bitterorangen – pflanzen lassen! Die Schwestern im Krankensaal brauchten abends beim Durchgang gar nicht erst zu fragen, wer heimlich im Park Obst gestohlen hatte: Wer noch Stunden später mit verzogenem Mund nach einem Glas Zuckerwasser verlangte, war sofort überführt!",
+        walkInstruction: "Gehen Sie nun zum Pavelló de Sant Rafael (auf der rechten, östlichen Seite der Hauptallee). Betreten Sie den historischen Krankensaal und starten Sie dort Station 4."
+      },
+      {
+        id: "station-4",
+        number: 4,
+        title: "Pavelló de Sant Rafael",
+        subtitle: "Der historische Krankensaal der 1920er Jahre, abgerundete Ecken gegen Keime und Antoni Gaudís letzte Lebenstage",
+        location: "Im Inneren des Pavelló de Sant Rafael, mitten im restaurierten Krankensaal neben den schmiedeeisernen Betten",
+        duration: "ca. 11 Min.",
+        tags: ["Krankensaal 1920er", "Runde Ecken & Pastellgewölbe", "Antoni Gaudís Tod (1926)", "Natürliche Lüftung"],
+        lookPrompt: "Betrachten Sie die pastellgrünen und wasserblauen Gewölbekacheln, suchen Sie nach den abgerundeten Wandkehlen und treten Sie an eines der weißen Krankenbetten heran.",
+        paragraphs: [
+          "Wir befinden uns nun im Inneren des Pavelló de Sant Rafael. Er wurde zwischen 1914 und 1918 erbaut – finanziert durch eine Spende des Mäzens Rafael Rabell i Patxot – und diente ursprünglich der Traumatologie und der Pflege kranker Männer. Heute ist dieser Pavillon einer der kostbarsten Orte des gesamten Areals, denn er wurde originalgetreu in jenen Zustand zurückversetzt, in dem er sich in den 1920er Jahren präsentierte.",
+          "Treten Sie ruhig nahe an eines der weißen Metallbetten mit dem gusseisernen Nachttisch und dem Paravent heran. Und dann heben Sie bitte Ihren Blick zur Decke. Was Sie hier über sich sehen, ist angewandte Medizin des frühen 20. Jahrhunderts in ihrer vollendetsten Form. Lassen Sie uns diesen Saal einmal mit den Augen eines Arztes aus dem Jahr 1920 lesen:",
+          "Erstens die Farben: Schauen Sie sich die glasierten Keramikkacheln an den Wänden und an den Gurtbögen der Gewölbedecke an. Warum sind sie in diesem sanften, kühlen Pastellgrün, Wasserblau und Cremeweiß gehalten? Weil Domènech i Montaner wusste, dass Patienten in einem Krankenbett stundenlang – oft tagelang – an die Decke starren! Eine grellweiße Decke blendet fiebrige Augen; eine dunkle Holzdecke drückt auf das Gemüt. Diese weichen Aquamarin- und Pastelltöne hingegen wirken nachweislich blutdrucksenkend, kühlend bei Fieber und beruhigend auf das vegetative Nervensystem.",
+          "Zweitens die runden Ecken: Schauen Sie nun auf die Stellen, an denen die Wände auf den Fußboden treffen, an die Fensternischen oder an die Übergänge der Pfeiler. Entdecken Sie irgendwo eine scharfe 90-Grad-Ecke? Nein! Jede einzelne Kante, jede Kehle im Saal ist sanft abgerundet. Warum? Weil sich in scharfen rechten Winkeln Staub, Hautschuppen und Krankheitserreger festsetzen, die kein Besen und kein Wischlappen vollständig erreicht. In einem Saal mit abgerundeten Keramikecken konnte das Pflegepersonal die Wände und Böden nahtlos mit Wasser und Desinfektionslauge abspülen – kein Keim fand hier ein Versteck!",
+          "Drittens die natürliche Klimaanlage: Sehen Sie die kleinen, durchbrochenen Rosetten hoch oben im Scheitelpunkt der Gewölbe und die Lüftungsschlitze hinter den Heizkörpern unter den insgesamt 18 großen Fenstern? Frische, sauerstoffreiche Parkluft strömte von außen ein, wurde im Winter direkt an den Radiatoren vorgewärmt, stieg sanft im Raum auf und nahm die verbrauchte Atemluft der bis zu 30 Patienten über die Deckenrosetten und die kleinen Keramiktürmchen auf dem Dach nach draußen mit. Ein ständiger, völlig zugfreier Luftaustausch – ganz ohne Strom!",
+          "Doch wenn wir heute durch solch einen historischen Krankensaal des alten Spitals gehen, schwebt über den weiß bezogenen Betten vor allem eine große, tief bewegende Erinnerung der Stadt Barcelona. Es ist die Geschichte vom 7. Juni 1926. An jenem warmen Frühsommerabend gegen 18 Uhr machte sich ein 73-jähriger Mann zu Fuß von seiner Baustelle an der Sagrada Família auf den Weg zur Kirche Sant Felip Neri in der Altstadt, wo er wie jeden Tag beten und beichten wollte.",
+          "Der alte Mann sah aus wie ein Bettler. Er war abgemagert, hatte einen weißen, zerzausten Bart, trug einen abgewetzten dunklen Anzug, der an mehreren Stellen nicht mit Knöpfen, sondern mit einfachen Sicherheitsnadeln zusammengehalten wurde. In den Taschen hatte er keine Brieftasche, keinen Ausweis, kein Geld – nur ein kleines Evangelienbuch und ein paar Haselnüsse. Auf der Gran Via de les Corts Catalanes, zwischen der Carrer de Girona und der Carrer de Bailèn, geschah das Unglück: Der alte Mann trat auf die Fahrbahn, vertieft in seine Gedanken, und sah die herannahende Straßenbahn der Linie 30 nicht. Die Bahn erfasste ihn mit voller Wucht und schleuderte ihn zu Boden.",
+          "Und nun geschah etwas, das Barcelona sich bis heute kaum verzeihen kann: Drei Taxifahrer hielten nacheinander an – und alle drei weigerten sich, den blutenden Greis mitzunehmen! Sie hielten ihn für einen mittellosen Landstreicher, der ihnen die Rückbank verschmutzen und die Fahrt nicht bezahlen würde. Erst als ein Polizist der Guàrdia Civil eingriff und einen vierten Fahrer zwang anzuhalten, wurde der Verletzte ins Krankenhaus der Armen gebracht – in die noch in Betrieb befindlichen alten Krankenstationen des Hospital de la Santa Creu, das damals gerade mitten im schrittweisen Umzug hierher nach Sant Pau steckte.",
+          "Dort legte man den unbekannten Alten in ein schlichtes Eisenbett der allgemeinen Armenstation – ganz genau so eines, wie Sie es hier vor sich im Pavelló de Sant Rafael sehen. Erst am nächsten Morgen, als der Kaplan der Sagrada Família, Mosén Gil Parés, und der Architekt Domènech Sugrañes verzweifelt alle Krankenhäuser der Stadt absuchten, traten sie in den Armensaal, sahen in das stille, blasse Gesicht auf dem Kissen und riefen entsetzt aus: Das ist Antoni Gaudí!"
+        ],
+        anecdoteTitle: "„Mein Platz ist hier, mitten unter den Armen“",
+        anecdoteText: "Als sich wie ein Lauffeuer in Barcelona herumsprach, dass der berühmteste Architekt des Landes – der Schöpfer der Sagrada Família, der Casa Milà und des Park Güell – wie ein Bettler im Armensaal des Hospitals lag, brach unter den Honoratioren der Stadt hektische Betriebsamkeit aus. Sofort eilten Ärzte, Stadträte und reiche Gönner an sein Bett. Man wollte den großen Meister unverzüglich in eine luxuriöse Privatklinik oder zumindest in ein erstklassiges Einzelzimmer verlegen lassen. Doch Antoni Gaudí, der inzwischen wieder bei Bewusstsein war, schlug die Augen auf, sah auf die kranken Arbeiter und Tagelöhner in den Nachbarbetten neben sich und wehrte mit schwacher, aber unerbittlicher Stimme ab. Er sagte einen Satz, der in die Geschichte Kataloniens eingegangen ist: „El meu lloc és aquí, entre els pobres.“ – „Mein Platz ist hier, mitten unter den Armen.“ Er weigerte sich strikt, ein Privileg anzunehmen, das seinen Mitpatienten verwehrt blieb. Drei Tage nach dem Unfall, am 10. Juni 1926, starb Antoni Gaudí im Alter von 73 Jahren im Hospital. Als sein Sarg zwei Tage später aus dem Spital getragen wurde, säumten Hunderttausende Menschen schweigend die Straßen bis zur Sagrada Família.",
+        walkInstruction: "Verlassen Sie den Pavelló de Sant Rafael und gehen Sie weiter zum Pavelló de Sant Salvador sowie dem zentralen Operationspavillon (Casa d’Operacions) in der Mittelachse. Starten Sie dort Station 5."
+      },
+      {
+        id: "station-5",
+        number: 5,
+        title: "Pavelló de Sant Salvador & Die Tageslicht-OPs",
+        subtitle: "Die dramatische Baugeschichte (1902–1930), der drohende Bankrott, Pere Domènech i Roura und die verglasten Operationssäle",
+        location: "Am und im Pavelló de Sant Salvador mit Blick auf die gläsernen Erker der benachbarten Casa d’Operacions",
+        duration: "ca. 10 Min.",
+        tags: ["Bauzeit 1902–1930", "Bankrott 1913", "Sohn Pere Domènech i Roura", "Tageslicht-Operationssäle"],
+        lookPrompt: "Betrachten Sie sowohl die Fassade von Sant Salvador als auch die großen, wie ein Gewächshaus verglasten Operationssäle am benachbarten Gebäude in der Mittelachse.",
+        paragraphs: [
+          "Wir stehen nun am und im Pavelló de Sant Salvador – und zugleich in unmittelbarer Nachbarschaft zum zentralen Operationsgebäude, der Casa d’Operacions. Der Pavelló de Sant Salvador nimmt in der Chronik von Sant Pau einen ganz besonderen Ehrenplatz ein: Er war der allererste Pavillon, in den im Jahr 1916 tatsächlich die ersten Patienten einzogen!",
+          "Doch wenn Sie sich die Jahreszahlen auf der Zeittafel anschauen, stutzen Sie vielleicht einen Moment: Grundsteinlegung 1902 – Eröffnung des ersten Pavillons 1916 – offizielle Gesamteinweihung durch König Alfons den Dreizehnten erst im Jahr 1930! Warum hat es geschlagene 28 Jahre gedauert, dieses Krankenhaus zu bauen?",
+          "Die Antwort liest sich wie ein Wirtschaftskrimi. Erinnern Sie sich an das stolze Erbe des Pariser Bankiers Pau Gil aus dem Jahr 1896? Jene drei Millionen Peseten schienen am Anfang unerschöpflich. Doch Lluís Domènech i Montaner baute eben nicht mit billigem Zement und Standardziegeln. Er engagierte die besten Kunstschmiede, die besten Keramikmeister aus Valencia und Manises, die besten Glasmaler und Bildhauer Kataloniens. Jeder Pavillon wurde wie ein kleines Juwel handgefertigt. Hinzu kamen unvorhergesehene Schwierigkeiten mit dem lehmigen Untergrund, steigende Löhne und soziale Unruhen wie die Tragische Woche von 1909 in Barcelona – und so kam im Jahr 1913 der große Schock: Das Geld von Pau Gil war restlos aufgebraucht! Mitten im Bau drohte dem Jahrhundertprojekt der komplette Bankrott.",
+          "Die Testamentsvollstrecker aus Paris mussten zähneknirschend kapitulieren und übergaben die unvollendete Baustelle an die historische Verwaltung des alten Hospital de la Santa Creu – die sogenannte Molt Il·lustre Administració. Um den Weiterbau zu retten, startete man eine beispiellose Spendenkampagne unter dem reichen Bürgertum Barcelonas, verkaufte das alte Grundstück im Raval und bot wohlhabenden Industriellen und Bankiers einen unwiderstehlichen Handel an: Finanzieren Sie einen kompletten Pavillon – und Ihr Name sowie Ihr Schutzheiliger werden für alle Ewigkeit in Stein, Mosaik und Gold an der Fassade verewigt!",
+          "Und dann schlug das Schicksal noch einmal zu: Am 27. Dezember 1923 starb Lluís Domènech i Montaner im Alter von 73 Jahren an einem Magenleiden, ohne die offizielle Gesamteröffnung seines Lebenswerks erlebt zu haben. Wer sollte das gigantische Puzzle vollenden? Die Wahl fiel auf seinen eigenen Sohn, den Architekten Pere Domènech i Roura, der seinem Vater bereits seit 1914 auf der Baustelle assistiert hatte. Pere stand unter massivem Kostendruck, und so baute er die nördlichen Pavillons in den 1920er Jahren sparsamer und nüchterner, aber mit großem Respekt vor der Gesamtkomposition seines Vaters, bis König Alfons der Dreizehnte das vollendete Spital schließlich am 16. Januar 1930 feierlich einweihte.",
+          "Bevor wir diesen Bereich verlassen, richten Sie Ihren Blick bitte auf das markante Gebäude genau in der Mittelachse des Parks gleich nebenan: die Casa d’Operacions, das historische Operationshaus. Fallen Ihnen an der Fassade und im Dachbereich diese riesigen, schrägen Glasfenster und Glaskuppeln auf, die fast wie das Atelier eines Malers oder ein botanisches Gewächshaus wirken? Das waren die Tageslicht-Operationssäle!",
+          "Warum waren sie rundum und von oben verglast? Um 1905 bis 1920 gab es zwar schon elektrisches Licht, aber die damaligen Glühbirnen waren schwach, warfen harte, gefährliche Schatten in tiefe Operationswunden und fielen bei Netzschwankungen ständig aus! Außerdem konnte ein elektrischer Funke in einem Raum voller hochentzündlicher Äther- und Chloroformdämpfe – den damaligen Narkosegasen – eine tödliche Explosion auslösen. Deshalb war das hellste, schattenfreieste und sicherste Licht für einen Chirurgen das natürliche, indirekte Tageslicht aus Norden kombiniert mit Oberlicht!"
+        ],
+        anecdoteTitle: "Chirurgen im Schaufenster – Das unfreiwillige Freiluftkino",
+        anecdoteText: "Diese hochmodernen, riesigen Glasfronten der Operationssäle hatten allerdings einen kuriosen Nebeneffekt, den weder Vater noch Sohn Domènech bedacht hatten! Wenn die Chirurgen in ihren weißen Kitteln direkt hinter den gewaltigen Glasfenstern operierten, herrschte im Operationssaal wegen der Instrumenten-Sterilisatoren und der Sonneneinstrahlung oft eine brütende Hitze von über 35 Grad. Zugleich flanierten draußen im Park die genesenden Patienten auf ihren Spaziergängen vorbei. Und für viele Patienten gab es natürlich nichts Spannenderes, als sich draußen auf den Gartenbänken oder auf den Terrassen der gegenüberliegenden Pavillons zu versammeln und gespannt zum großen Glasfenster hinaufzuschauen – als säßen sie im Theater! Man stelle sich die Szene vor: Drinnen tupft die Schwester dem schweißgebadeten Chefchirurgen die Stirn, während er hochkonzentriert einen Blinddarm entfernt – und draußen im Garten stehen fünfzehn Patienten im gestreiften Krankenhauspyjama, gestikulieren lebhaft und kommentieren wie beim Fußballspiel jede Handbewegung des Doktors! Die Chirurgen fühlten sich wie Goldfische im Schaufenster. Nach heftigen Beschwerden der Ärzteschaft musste man schließlich der untersten Scheibenreihe mit Milchglas und weißen Vorhängen nachhelfen, damit das Licht zwar von oben hereinkam, das neugierige Gartenpublikum aber draußen blieb!",
+        walkInstruction: "Spazieren Sie nun durch die Gärten zurück zum großen Administrationsgebäude am Haupteingang. Steigen Sie über die prachtvolle Ehrentreppe hinauf in das erste Obergeschoss zum Kuppelsaal und starten Sie dort Station 6."
+      },
+      {
+        id: "station-6",
+        number: 6,
+        title: "Kuppelsaal Administration & Portalblick",
+        subtitle: "Der Umzug in den Neubau 2009, die UNESCO-Restaurierung und der Abschiedsblick entlang der Avinguda de Gaudí zur Sagrada Família",
+        location: "Im ersten Obergeschoss des Administrationsgebäudes, im festlichen Kuppelsaal und am großen Mittelfenster über dem Portal",
+        duration: "ca. 9 Min.",
+        tags: ["Umzug Neubau 2009", "UNESCO Welterbe (1997)", "Zeitkapsel-Restaurierung", "Blick zur Sagrada Família"],
+        lookPrompt: "Blicken Sie zuerst hinauf in die reich verzierte Kuppel des Saales und treten Sie zum Finale dicht an das große Bogenfenster in der Mitte, um die Avinguda de Gaudí hinabzuschauen.",
+        paragraphs: [
+          "Sie haben nun die prachtvolle Ehrentreppe aus Marmor erklommen, sind an der rosafarbenen Säulenhalle der Eingangslobby vorbeigeschritten und stehen hier oben im festlichen Herzen des gesamten Ensembles: dem Kuppelsaal des Administrationsgebäudes. Lassen Sie Ihren Blick noch einmal langsam nach oben gleiten – in diese schwindelerregende Kuppelkonstruktion, in das feine Netz aus Steinrippen, floralen Kapitellen, glasierten Kacheln und warmem Licht, das durch die hohen Buntglasfenster fällt.",
+          "Fast ein ganzes Jahrhundert lang – von 1916 bis ins Jahr 2009 – war dieses Märchenschloss aus Stein und Keramik kein Museum, sondern ein rund um die Uhr arbeitendes Großkrankenhaus. Hier in diesen Sälen wurden Generationen von Einwohnern Barcelonas geboren. Hier wurden im Spanischen Bürgerkrieg zwischen 1936 und 1939 Tausende Opfer der Luftangriffe auf Barcelona unter Lebensgefahr operiert. Hier wurde 1984 die erste erfolgreiche Herztransplantation Spaniens durchgeführt!",
+          "Doch gegen Ende des 20. Jahrhunderts wiederholte sich die Geschichte: So wie das gotische Spital im Raval um 1900 an die Grenzen seiner Zeit gestoßen war, so stieß nun auch Domènech i Montaners Jugendstil-Gartenstadt an die Grenzen der Medizin des 21. Jahrhunderts. Moderne Kernspintomographen wogen viele Tonnen und passten durch keine verzierte Jugendstiltür; für Intensivstationen und hochsterile Klimatechnik waren die unter Denkmalschutz stehenden Pavillons schlicht nicht mehr umrüstbar. Man hatte in den 1960er und 70er Jahren sogar begonnen, die herrlichen bunten Gewölbedecken in den Krankensälen hinter trostlosen abgehängten weißen Gipskartondecken zu verstecken, um Kabel und Neonröhren zu verlegen!",
+          "Die Wendung kam im Jahr 1997: Die UNESCO erklärte den Recinte Modernista de Sant Pau zusammen mit dem Palau de la Música Catalana zum Weltkulturerbe der Menschheit. Damit fiel eine historische Entscheidung: Das Krankenhaus sollte auf dem eigenen Gelände bleiben, aber in einen hochmodernen Neubau ganz im Norden des Parks umziehen. Im Juni 2009 war es so weit: Nach über 80 Jahren verließen die letzten Patienten, Ärzte und Krankenschwestern die historischen Jugendstil-Pavillons und zogen wenige hundert Meter weiter bergauf in das neue, hochmoderne Hospital de la Santa Creu i Sant Pau.",
+          "Und hier, in den historischen Mauern, begann eines der größten Restaurierungsprojekte Europas: Fünf Jahre lang, von 2009 bis 2014, legten Hunderte Restauratoren, Steinmetze, Glaskünstler und Keramiker unter den Nachkriegseinbauten das ursprüngliche Meisterwerk von Lluís Domènech i Montaner wieder frei, bis die Anlage im Frühjahr 2014 in genau jenem Glanz wiedererstrahlte, in dem Sie sie heute erlebt haben.",
+          "Und nun treten Sie bitte zum Abschluss unseres Rundgangs ganz dicht an das große, bogenförmige Mittelfenster hier im Obergeschoss heran und blicken Sie hinaus. Schauen Sie hinaus auf dieses unvergleichliche Panorama Barcelonas. Direkt unter Ihnen liegt der Vorplatz, an dem unsere Reise vor einer Stunde begonnen hat. Und genau vor Ihnen zieht sich schnurgerade – im rebellischen 45-Grad-Winkel durch das Häusermeer des Eixample – die Avinguda de Gaudí hinab bis zu den himmelstrebenden Türmen der Sagrada Família, dahinter am Horizont das glitzernde Blau des Mittelmeeres.",
+          "Es hat eine wunderbare, fast poetische Ironie, dass ausgerechnet diese Allee, die auf das Hauptwerk von Lluís Domènech i Montaner zuläuft, den Namen seines großen Rivalen Antoni Gaudí trägt. Beide Männer waren Kinder derselben Epoche, beide suchten nach einer neuen, unverwechselbaren Sprache für Katalonien, und doch hätten sie unterschiedlicher kaum sein können: Dort unten Antoni Gaudí – der tiefreligiöse Mystiker und Einzelgänger, der für Gott baute und am Ende seines Lebens arm und unerkannt in den Mauern dieses Spitals starb. Und hier oben Lluís Domènech i Montaner – der weltgewandte Humanist, Wissenschaftler und Aufklärer, der für den leidenden Menschen baute und die Schönheit der Kunst in den Dienst der Heilung stellte.",
+          "Hier, in diesem einen Blick aus dem Fenster von Sant Pau, reichen sich die beiden Giganten Barcelonas über die Jahrzehnte hinweg die Hand. Nehmen Sie dieses Bild, das Licht der bunten Glasfenster und den Duft von Lavendel und Eukalyptus mit hinaus in die Stadt. Ich danke Ihnen herzlich für Ihre Begleitung durch den Recinte Modernista de Sant Pau – und wünsche Ihnen noch wunderbare, inspirierende Stunden in Barcelona!"
+        ],
+        anecdoteTitle: "Der Schatz hinter der Rigipsdecke",
+        anecdoteText: "Als die Restauratoren im Jahr 2009 nach dem Auszug der letzten klinischen Abteilungen anrückten und vorsichtig begannen, die hässlichen, vergilbten Akustik- und Rigipsdecken aus der Franco-Zeit der 1960er und 70er Jahre herunterzunehmen, hielten viele den Atem an. Man befürchtete das Schlimmste: dass die Handwerker vor vierzig Jahren die feinen Keramikblumen, die glasierten Kuppeln und die Mosaike einfach abgeschlagen hatten, um ihre Metallschienen für die Neonlampen in die Decke zu dübeln. Doch als die erste falsche Decke fiel, trauten die Kunsthistoriker ihren Augen kaum! Die Bauarbeiter der 1960er Jahre hatten offenbar selbst so viel heimlichen Respekt vor der Schönheit von Domènech i Montaners Decken gehabt, dass sie ihre Halterungen mit äußerster Vorsicht fast nur in die Mörtelfugen gesetzt hatten! Mehr noch: Die ungeliebten abgehängten Zwischendecken hatten über vier Jahrzehnte hinweg wie eine luftdichte Zeitkapsel gewirkt! Sie hatten die Originalkeramik vor Ruß, Abgasen und UV-Licht geschützt. Als man den Staub von vierzig Jahren herunterpinselte, leuchteten die Pastellfarben und goldenen Mosaike darunter so taufrisch wie am Tag ihrer Entstehung im Jahr 1910. Manchmal rettet eben selbst eine Bausünde der 70er Jahre ein Weltkulturerbe!",
+        walkInstruction: "Ende des Rundgangs. Genießen Sie beim Hinausgehen noch einen Spaziergang über die Avinguda de Gaudí hinab zur Sagrada Família!"
+      }
+    ];
+
+    function renderStations() {
+      const container = document.getElementById("stationsContainer");
+      container.innerHTML = stationsData.map((st, sIdx) => {
+        const anecdoteIdx = st.paragraphs.length;
+
+        return `
+          <article id="${st.id}" class="bg-white rounded-3xl shadow-xl border border-stone-200/90 overflow-hidden transition-all">
+            <div class="bg-gradient-to-r from-stone-900 via-stone-800 to-ceramic-900 text-white p-6 sm:p-10 relative">
+              <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div class="inline-flex items-center gap-2.5">
+                  <span class="w-9 h-9 rounded-xl bg-terracotta-600 text-white font-serif font-bold text-lg flex items-center justify-center shadow">
+                    ${st.number}
+                  </span>
+                  <span class="text-xs font-bold uppercase tracking-widest text-mosaic-400">
+                    Station ${st.number} von 6 • ${st.duration}
+                  </span>
+                </div>
+
+                <button onclick="playStation(${sIdx}, 0)" id="station-btn-${sIdx}"
+                  class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-terracotta-600 hover:bg-terracotta-500 text-white text-xs sm:text-sm font-semibold shadow-lg transition cursor-pointer">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <span>Station ${st.number} vorlesen</span>
+                </button>
+              </div>
+
+              <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white leading-tight">
+                ${st.title}
+              </h2>
+              <p class="text-stone-300 text-sm sm:text-base mt-2 max-w-3xl">
+                ${st.subtitle}
+              </p>
+
+              <div class="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-stone-300">
+                <div class="flex items-center gap-2">
+                  <span class="text-mosaic-400 font-bold">📍 Standort:</span>
+                  <span>${st.location}</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                  ${st.tags.map(t => `<span class="px-2.5 py-1 rounded-md bg-white/10 text-stone-200 font-medium">${t}</span>`).join("")}
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-ceramic-50 border-b border-ceramic-200/70 px-6 sm:px-10 py-4 flex items-start gap-3">
+              <span class="text-xl mt-0.5">👁️</span>
+              <div class="text-xs sm:text-sm text-ceramic-900">
+                <strong class="font-semibold uppercase tracking-wider text-[11px] text-ceramic-700 block mb-0.5">Blickrichtung vor Ort</strong>
+                ${st.lookPrompt}
+              </div>
+            </div>
+
+            <div class="p-6 sm:p-10 space-y-5">
+              <div class="text-xs text-stone-400 italic mb-2 flex items-center justify-between">
+                <span>💡 Tipp: Klicken Sie auf einen beliebigen Absatz, um die Bariton-Stimme genau ab dort zu starten.</span>
+              </div>
+
+              ${st.paragraphs.map((pText, pIdx) => `
+                <div id="para-${sIdx}-${pIdx}"
+                  onclick="playStation(${sIdx}, ${pIdx})"
+                  class="paragraph-block p-3 sm:p-4 rounded-xl cursor-pointer text-stone-800 font-serif text-xl sm:text-[22px] leading-[1.75]">
+                  ${pText}
+                </div>
+              `).join("")}
+
+              <div id="para-${sIdx}-${anecdoteIdx}"
+                onclick="playStation(${sIdx}, ${anecdoteIdx})"
+                class="paragraph-block mt-8 bg-gradient-to-br from-mosaic-100/80 via-[#fdf9ef] to-terracotta-50/50 rounded-2xl p-6 sm:p-8 border border-mosaic-400/50 shadow-sm cursor-pointer">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-mosaic-400/20 text-mosaic-600 text-xs font-bold uppercase tracking-wider">
+                    <span>😉 Historische Anekdote zu Station ${st.number}</span>
+                  </div>
+                  <span class="text-xs text-stone-500 font-sans font-medium flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 fill-current text-terracotta-600" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Anhören
+                  </span>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-stone-900 mb-3">
+                  ${st.anecdoteTitle}
+                </h3>
+                <p class="font-serif text-lg sm:text-xl text-stone-800 leading-relaxed italic">
+                  „${st.anecdoteText}“
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-stone-100/90 border-t border-stone-200 px-6 sm:px-10 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3 text-xs sm:text-sm text-stone-700">
+                <span class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-base shrink-0">🚶</span>
+                <div>
+                  <strong class="font-bold text-stone-900 block">Übergang / Nächster Wegpunkt:</strong>
+                  <span>${st.walkInstruction}</span>
+                </div>
+              </div>
+              ${sIdx < stationsData.length - 1 ? `
+                <button onclick="playStation(${sIdx + 1}, 0)" class="shrink-0 px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-900 text-white text-xs font-semibold transition cursor-pointer">
+                  Weiter zu Station ${sIdx + 2} →
+                </button>
+              ` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    const synth = window.speechSynthesis;
+    let availableVoices = [];
+    let selectedVoice = null;
+
+    let voiceConfig = {
+      lang: "de-DE",
+      pitch: 0.82,
+      rate: 0.95,
+      autoScroll: true
+    };
+
+    let currentStationIdx = 0;
+    let currentParaIdx = 0;
+    let isPlaying = false;
+    let isPaused = false;
+    let sentenceQueue = [];
+    let currentSentenceIdx = 0;
+    let pauseTimer = null;
+
+    const preferredVoiceKeywords = [
+      "google deutsch",
+      "stefan",
+      "martin",
+      "markus",
+      "conrad",
+      "killian",
+      "christoph",
+      "daniel",
+      "male"
+    ];
+
+    function playChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(293.66, now);
+        osc2.type = "triangle";
+        osc2.frequency.setValueAtTime(440.0, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 1.85);
+        osc2.stop(now + 1.85);
+      } catch (e) {}
+    }
+
+    function loadVoices() {
+      if (!synth) return;
+      const allVoices = synth.getVoices();
+      if (!allVoices || allVoices.length === 0) return;
+
+      const germanVoices = allVoices.filter(v =>
+        v.lang.toLowerCase().startsWith("de")
+      );
+
+      const pool = germanVoices.length > 0 ? germanVoices : allVoices;
+
+      pool.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        const scoreA = preferredVoiceKeywords.findIndex(k => nameA.includes(k));
+        const scoreB = preferredVoiceKeywords.findIndex(k => nameB.includes(k));
+        const rankA = scoreA === -1 ? 999 : scoreA;
+        const rankB = scoreB === -1 ? 999 : scoreB;
+        return rankA - rankB;
+      });
+
+      availableVoices = pool;
+      const selectEl = document.getElementById("voiceSelect");
+      const hintEl = document.getElementById("voicePriorityHint");
+
+      selectEl.innerHTML = availableVoices.map((v, idx) => {
+        const isPreferred = preferredVoiceKeywords.some(k => v.name.toLowerCase().includes(k));
+        return `<option value="${idx}">${isPreferred ? "★ " : ""}${v.name} (${v.lang})</option>`;
+      }).join("");
+
+      selectedVoice = availableVoices[0] || null;
+
+      if (selectedVoice) {
+        const matchedPref = preferredVoiceKeywords.some(k => selectedVoice.name.toLowerCase().includes(k));
+        hintEl.textContent = matchedPref
+          ? `✓ Optimale Bariton-/Prioritätsstimme aktiv: ${selectedVoice.name}`
+          : `Aktive Stimme: ${selectedVoice.name} (mit Bariton-Pitch ${voiceConfig.pitch} moduliert)`;
+      }
+
+      selectEl.onchange = (e) => {
+        const idx = parseInt(e.target.value, 10);
+        if (!isNaN(idx) && availableVoices[idx]) {
+          selectedVoice = availableVoices[idx];
+          hintEl.textContent = `Gewählte Stimme: ${selectedVoice.name}`;
+          if (isPlaying) {
+            playStation(currentStationIdx, currentParaIdx, false);
+          }
+        }
+      };
+    }
+
+    if (synth) {
+      loadVoices();
+      if (typeof synth.onvoiceschanged !== "undefined") {
+        synth.onvoiceschanged = loadVoices;
+      }
+    }
+
+    function updateVoiceParams() {
+      const pitchVal = parseFloat(document.getElementById("pitchSlider").value);
+      const rateVal = parseFloat(document.getElementById("rateSlider").value);
+
+      voiceConfig.pitch = pitchVal;
+      voiceConfig.rate = rateVal;
+
+      document.getElementById("pitchValueDisplay").textContent = pitchVal.toFixed(2);
+      document.getElementById("rateValueDisplay").textContent = rateVal.toFixed(2) + "x";
+
+      if (isPlaying && !isPaused) {
+        playStation(currentStationIdx, currentParaIdx, false);
+      }
+    }
+
+    function applyVoicePreset(pitch, rate) {
+      document.getElementById("pitchSlider").value = pitch;
+      document.getElementById("rateSlider").value = rate;
+      updateVoiceParams();
+    }
+
+    function syncAutoScroll(checked) {
+      voiceConfig.autoScroll = checked;
+      const mob = document.getElementById("autoScrollToggleMobile");
+      const desk = document.getElementById("autoScrollToggleDesktop");
+      if (mob) mob.checked = checked;
+      if (desk) desk.checked = checked;
+    }
+
+    function splitIntoSentences(text) {
+      const raw = text.match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g);
+      return raw ? raw.map(s => s.trim()).filter(Boolean) : [text];
+    }
+
+    function getParagraphText(sIdx, pIdx) {
+      const st = stationsData[sIdx];
+      if (!st) return "";
+      if (pIdx < st.paragraphs.length) {
+        return st.paragraphs[pIdx];
+      }
+      return `Historische Anekdote zu Station ${st.number}: ${st.anecdoteTitle}. ${st.anecdoteText}`;
+    }
+
+    function getTotalParagraphs(sIdx) {
+      const st = stationsData[sIdx];
+      return st ? st.paragraphs.length + 1 : 0;
+    }
+
+    function highlightActiveParagraph(sIdx, pIdx) {
+      document.querySelectorAll(".paragraph-block").forEach(el => {
+        el.classList.remove("speaking-active");
+      });
+
+      const activeEl = document.getElementById(`para-${sIdx}-${pIdx}`);
+      if (activeEl) {
+        activeEl.classList.add("speaking-active");
+        if (voiceConfig.autoScroll) {
+          activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      const st = stationsData[sIdx];
+      const totalP = getTotalParagraphs(sIdx);
+      document.getElementById("playerStationLabel").textContent =
+        `Station ${st.number} von 6 • ${pIdx === st.paragraphs.length ? "Anekdote" : `Absatz ${pIdx + 1}/${totalP}`}`;
+      document.getElementById("playerTitleLabel").textContent = st.title;
+      document.getElementById("paragraphCounter").textContent = `Absatz ${pIdx + 1} / ${totalP}`;
+
+      const percent = ((pIdx + 1) / totalP) * 100;
+      document.getElementById("progressBar").style.width = `${percent}%`;
+    }
+
+    function updatePlayerIcons() {
+      const playIcon = document.getElementById("playIcon");
+      const pauseIcon = document.getElementById("pauseIcon");
+      const eq = document.getElementById("eqContainer");
+
+      if (isPlaying && !isPaused) {
+        playIcon.classList.add("hidden");
+        pauseIcon.classList.remove("hidden");
+        eq.classList.add("is-playing");
+      } else {
+        playIcon.classList.remove("hidden");
+        pauseIcon.classList.add("hidden");
+        eq.classList.remove("is-playing");
+      }
+    }
+
+    function clearTimersAndSpeech() {
+      if (pauseTimer) {
+        clearTimeout(pauseTimer);
+        pauseTimer = null;
+      }
+      if (synth) {
+        synth.cancel();
+      }
+    }
+
+    function playStation(sIdx, pIdx = 0, withChime = true) {
+      if (!synth) {
+        alert("Ihr Browser unterstützt leider keine Web Speech API Sprachausgabe.");
+        return;
+      }
+
+      clearTimersAndSpeech();
+
+      currentStationIdx = sIdx;
+      currentParaIdx = pIdx;
+      isPlaying = true;
+      isPaused = false;
+
+      if (withChime && pIdx === 0) {
+        playChime();
+      }
+
+      highlightActiveParagraph(currentStationIdx, currentParaIdx);
+      updatePlayerIcons();
+
+      const fullText = getParagraphText(currentStationIdx, currentParaIdx);
+      sentenceQueue = splitIntoSentences(fullText);
+      currentSentenceIdx = 0;
+
+      const startDelay = (withChime && pIdx === 0) ? 650 : 80;
+      pauseTimer = setTimeout(() => {
+        speakNextSentence();
+      }, startDelay);
+    }
+
+    function speakNextSentence() {
+      if (!isPlaying || isPaused) return;
+
+      if (currentSentenceIdx >= sentenceQueue.length) {
+        pauseTimer = setTimeout(() => {
+          advanceToNextParagraphAuto();
+        }, 1100);
+        return;
+      }
+
+      const sentenceText = sentenceQueue[currentSentenceIdx];
+      const utterance = new SpeechSynthesisUtterance(sentenceText);
+
+      utterance.lang = voiceConfig.lang;
+      utterance.pitch = voiceConfig.pitch;
+      utterance.rate = voiceConfig.rate;
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+
+      utterance.onend = () => {
+        if (!isPlaying || isPaused) return;
+        currentSentenceIdx++;
+        speakNextSentence();
+      };
+
+      utterance.onerror = (ev) => {
+        if (ev.error === "interrupted" || ev.error === "canceled") return;
+        currentSentenceIdx++;
+        speakNextSentence();
+      };
+
+      synth.speak(utterance);
+    }
+
+    function advanceToNextParagraphAuto() {
+      const totalP = getTotalParagraphs(currentStationIdx);
+      if (currentParaIdx + 1 < totalP) {
+        playStation(currentStationIdx, currentParaIdx + 1, false);
+      } else {
+        isPlaying = false;
+        isPaused = false;
+        updatePlayerIcons();
+        const st = stationsData[currentStationIdx];
+        document.getElementById("playerStationLabel").textContent =
+          `✓ Station ${st.number} abgeschlossen • Geh-Intervall zur nächsten Station`;
+      }
+    }
+
+    function startFullTour() {
+      playStation(0, 0, true);
+    }
+
+    function togglePlayPause() {
+      if (!isPlaying) {
+        playStation(currentStationIdx, currentParaIdx, currentParaIdx === 0);
+        return;
+      }
+
+      if (isPaused) {
+        isPaused = false;
+        updatePlayerIcons();
+        if (synth.paused) {
+          synth.resume();
+        } else {
+          speakNextSentence();
+        }
+      } else {
+        isPaused = true;
+        updatePlayerIcons();
+        if (pauseTimer) {
+          clearTimeout(pauseTimer);
+          pauseTimer = null;
+        }
+        synth.cancel();
+      }
+    }
+
+    function stopAudio() {
+      clearTimersAndSpeech();
+      isPlaying = false;
+      isPaused = false;
+      updatePlayerIcons();
+      document.querySelectorAll(".paragraph-block").forEach(el => {
+        el.classList.remove("speaking-active");
+      });
+      document.getElementById("playerStationLabel").textContent =
+        `Wiedergabe gestoppt • Station ${currentStationIdx + 1}`;
+    }
+
+    function nextParagraph() {
+      const totalP = getTotalParagraphs(currentStationIdx);
+      if (currentParaIdx + 1 < totalP) {
+        playStation(currentStationIdx, currentParaIdx + 1, false);
+      } else if (currentStationIdx + 1 < stationsData.length) {
+        playStation(currentStationIdx + 1, 0, true);
+      }
+    }
+
+    function prevParagraph() {
+      if (currentParaIdx > 0) {
+        playStation(currentStationIdx, currentParaIdx - 1, false);
+      } else if (currentStationIdx > 0) {
+        const prevSt = currentStationIdx - 1;
+        playStation(prevSt, getTotalParagraphs(prevSt) - 1, false);
+      }
+    }
+
+    function nextStation() {
+      const nextSt = (currentStationIdx + 1) % stationsData.length;
+      playStation(nextSt, 0, true);
+    }
+
+    function prevStation() {
+      const prevSt = (currentStationIdx - 1 + stationsData.length) % stationsData.length;
+      playStation(prevSt, 0, true);
+    }
+
+    function seekParagraph(event) {
+      const bar = event.currentTarget;
+      const rect = bar.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      const totalP = getTotalParagraphs(currentStationIdx);
+      const targetP = Math.min(totalP - 1, Math.floor(ratio * totalP));
+      playStation(currentStationIdx, targetP, false);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderStations();
+      loadVoices();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projektdokumentation – Recinte Modernista de Sant Pau Audioguide (DE & RU)</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terracotta: {
+              50: '#fdf5f3',
+              100: '#fbe8e4',
+              500: '#c85a43',
+              600: '#b04630',
+              700: '#923624',
+              800: '#792e20',
+              900: '#4a1b13',
+            },
+            ceramic: {
+              50: '#f2f9f8',
+              100: '#ddefec',
+              200: '#bce0da',
+              500: '#3d8b80',
+              600: '#2d6e65',
+              700: '#255852',
+              800: '#1f4742',
+              900: '#193a36',
+            },
+            mosaic: {
+              100: '#fbf3dc',
+              400: '#deb352',
+              500: '#c99733',
+              600: '#a87822',
+            }
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #f8f5ef;
+      color: #1c1917;
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(176, 70, 48, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 20%, rgba(45, 110, 101, 0.06) 0%, transparent 45%);
+    }
+    .mosaic-border {
+      height: 6px;
+      background: repeating-linear-gradient(
+        90deg,
+        #b04630 0px, #b04630 24px,
+        #deb352 24px, #deb352 48px,
+        #2d6e65 48px, #2d6e65 72px,
+        #f8f5ef 72px, #f8f5ef 84px
+      );
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #ede6d8; }
+    ::-webkit-scrollbar-thumb { background: #b04630; border-radius: 4px; }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-terracotta-600 selection:text-white pb-24">
+
+  <!-- Mosaik-Kopfleiste -->
+  <div class="mosaic-border sticky top-0 z-50"></div>
+
+  <!-- Navigation -->
+  <header class="sticky top-[6px] z-40 backdrop-blur-md bg-[#f8f5ef]/90 border-b border-stone-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-stone-900 text-mosaic-400 flex items-center justify-center font-serif font-bold text-xl shadow-sm">
+          DOC
+        </div>
+        <div>
+          <span class="text-[11px] uppercase tracking-widest text-terracotta-600 font-bold block">Technische & Inhaltliche Referenz</span>
+          <span class="font-serif text-lg font-bold text-stone-900 leading-none">Projekt: Sant Pau Audioguide (DE / RU)</span>
+        </div>
+      </div>
+
+      <!-- Kapitel-Navigation -->
+      <nav class="hidden lg:flex items-center gap-1 text-xs font-semibold text-stone-600">
+        <a href="#overview" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">1. Übersicht</a>
+        <a href="#architecture" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">2. Audio-Engine</a>
+        <a href="#minaev-style" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">3. Minaev-Stil (RU)</a>
+        <a href="#stations-spec" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">4. 6 Stationen</a>
+        <a href="#files" class="px-3 py-1.5 rounded-full hover:bg-stone-200/70 hover:text-stone-900 transition">5. Dateistruktur</a>
+      </nav>
+
+      <!-- Direktlinks zu den Apps -->
+      <div class="flex items-center gap-2">
+        <a href="sant-pau-audioguide.html" class="px-3.5 py-2 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-semibold shadow-sm transition">
+          🇩🇪 Deutsche App öffnen
+        </a>
+        <a href="sant-pau-audioguide-ru.html" class="px-3.5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-mosaic-400 text-xs font-semibold border border-stone-700 shadow-sm transition">
+          🇷🇺 Russische App öffnen
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO / PROJEKT-PORTAL -->
+  <section id="overview" class="pt-12 pb-16 border-b border-stone-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ceramic-100 text-ceramic-800 text-xs font-bold uppercase tracking-wider mb-4">
+          <span>📚 System- & Architektur-Dokumentation • Stand: Oktober 2026</span>
+        </div>
+        <h1 class="font-serif text-4xl sm:text-6xl font-bold text-stone-900 leading-[1.08]">
+          Interaktiver Vor-Ort-Audioguide: <span class="text-terracotta-600 italic font-normal">Recinte Modernista de Sant Pau</span>
+        </h1>
+        <p class="mt-4 text-lg text-stone-700 leading-relaxed">
+          Vollständige Dokumentation des zweisprachigen 60-Minuten-Hörbuch- & Web-Projekts für die Besichtigung des UNESCO-Weltkulturerbes in Barcelona – inklusive Web-Speech-Bariton-Synthese (DE) und vorab generierter neuronaler Studio-Sprachausgabe im dokumentarischen Storytelling-Stil von Sergei Minaev (RU).
+        </p>
+      </div>
+
+      <!-- ZWEI HAUPT-APPLIKATIONEN (LAUNCHPAD CARDS) -->
+      <div class="grid md:grid-cols-2 gap-8 mt-10">
+        
+        <!-- Card 1: Deutsche Version -->
+        <div class="bg-white rounded-3xl p-8 shadow-xl border border-stone-200/90 flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-terracotta-50 rounded-bl-full -z-0"></div>
+          <div class="relative z-10">
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="px-3 py-1 rounded-full bg-terracotta-100 text-terracotta-800 text-xs font-bold uppercase tracking-wider">
+                🇩🇪 Edition 1 • Deutsch (de-DE)
+              </span>
+              <span class="font-mono text-xs text-stone-500">sant-pau-audioguide.html</span>
+            </div>
+            <h2 class="font-serif text-3xl font-bold text-stone-900">
+              Klassisch-Literarischer Hörbuch-Guide
+            </h2>
+            <p class="text-sm text-stone-600 mt-2 leading-relaxed">
+              Gestaltet im hellen Pergament-, Terrakotta- und Aquamarin-Design des katalanischen <em>Modernisme</em>. Atmosphärischer, bildhafter Erzählstil eines Kultur- und Architekturführers.
+            </p>
+            <ul class="mt-5 space-y-2 text-xs sm:text-sm text-stone-700">
+              <li class="flex items-center gap-2">
+                <span class="text-ceramic-600 font-bold">✓</span>
+                <span><strong>Stimmprofil:</strong> Warmer männlicher Bariton (<code>pitch: 0.82</code>, optional <code>0.70</code>, <code>rate: 0.95x</code>)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-ceramic-600 font-bold">✓</span>
+                <span><strong>Engine:</strong> Satzweises Web-Speech-Chunking + Web-Audio-Glockenklang (293.66 Hz)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-ceramic-600 font-bold">✓</span>
+                <span><strong>Priorisierte Stimmen:</strong> Google Deutsch (Männlich), Microsoft Stefan, Martin, Markus</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-5 border-t border-stone-100 flex items-center justify-between">
+            <span class="text-xs text-stone-500">6 Stationen • 6 Anekdoten • SVG-Karte</span>
+            <a href="sant-pau-audioguide.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs sm:text-sm font-semibold shadow transition">
+              <span>Deutsche Seite starten</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: Russische Version (Minaev-Stil) -->
+        <div class="bg-stone-900 text-stone-100 rounded-3xl p-8 shadow-xl border border-stone-800 flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-mosaic-500/10 rounded-bl-full -z-0"></div>
+          <div class="relative z-10">
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="px-3 py-1 rounded-full bg-mosaic-500/20 text-mosaic-400 text-xs font-bold uppercase tracking-wider">
+                🇷🇺 Edition 2 • Russisch (ru-RU • Neural MP3)
+              </span>
+              <span class="font-mono text-xs text-stone-400">sant-pau-audioguide-ru.html</span>
+            </div>
+            <h2 class="font-serif text-3xl font-bold text-white">
+              Документальный Сторителлинг (Стиль С. Минаева)
+            </h2>
+            <p class="text-sm text-stone-300 mt-2 leading-relaxed">
+              Edles Studio-Noir-Design, inspiriert vom Format <em>«Уроки истории» (MINAEV LIVE)</em>. Dramaturgischer Fokus auf historische Intrigen, Finanzen, Psychologie und filmische Szenenwechsel.
+            </p>
+            <ul class="mt-5 space-y-2 text-xs sm:text-sm text-stone-300">
+              <li class="flex items-center gap-2">
+                <span class="text-mosaic-400 font-bold">✓</span>
+                <span><strong>Echte Männerstimme:</strong> 51 vorab generierte neuronale MP3s (<code>ru-RU-DmitryNeural</code>) in <code>audio_ru/</code></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-mosaic-400 font-bold">✓</span>
+                <span><strong>Zweistufiges Timbre:</strong> <code>-15 Hz</code> Synthese-Pitch + analoge Formant-Absenkung (<code>0.96</code>)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-mosaic-400 font-bold">✓</span>
+                <span><strong>Schutzfilter:</strong> Weibliche Systemstimmen (<em>Irina</em> etc.) sind per Blacklist komplett gesperrt</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-5 border-t border-stone-800 flex items-center justify-between">
+            <span class="text-xs text-stone-400">51 Studio-MP3s • 6 Episoden • Studio-Gong</span>
+            <a href="sant-pau-audioguide-ru.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-mosaic-500 hover:bg-mosaic-600 text-stone-950 text-xs sm:text-sm font-bold shadow transition">
+              <span>Russische Seite starten</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- KAPITEL 2: TECHNISCHE AUDIO-ARCHITEKTUR -->
+  <section id="architecture" class="py-16 border-b border-stone-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-ceramic-600 block">Kapitel 2</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mt-1">
+          Technische Audio- & Sprachsynthese-Architektur
+        </h2>
+        <p class="text-stone-600 mt-2 max-w-3xl text-sm sm:text-base">
+          Beide Applikationen funktionieren komplett serverlos (als lokale Datei über <code>file:///</code> im Browser) und lösen die typischen Einschränkungen moderner Browser-Sprachsynthese durch spezialisierte Audio-Pipelines.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-ceramic-100 text-ceramic-800 flex items-center justify-center font-bold text-lg mb-4">1</div>
+          <h3 class="font-serif text-2xl font-bold text-stone-900">15-Sekunden-Timeout-Schutz (Chunking)</h3>
+          <p class="text-sm text-stone-600 mt-2 leading-relaxed">
+            Die Browser-interne <code>SpeechSynthesisUtterance</code>-API bricht in Chromium-Browsern (Chrome, Edge, Android) oft nach ca. 15 Sekunden Sprechzeit abrupt ab. Unsere Engine zerlegt deshalb jeden Absatz per Regex in einzelne Sätze (<code>splitIntoSentences</code>), reiht diese in eine asynchrone Queue ein und fügt zwischen den Sätzen (240 ms) und Absätzen (1,15 s) natürliche Atempausen ein.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-terracotta-100 text-terracotta-800 flex items-center justify-center font-bold text-lg mb-4">2</div>
+          <h3 class="font-serif text-2xl font-bold text-stone-900">Zweistufige Bariton-Formant-Synthese (RU)</h3>
+          <p class="text-sm text-stone-600 mt-2 leading-relaxed">
+            Da Windows für Russisch standardmäßig oft nur die weibliche Stimme <em>Microsoft Irina</em> installiert hat, nutzt die russische Edition <strong>51 echte neuronale Männerstimmen-MP3s</strong> (<code>ru-RU-DmitryNeural</code>). Im Browser wird zusätzlich <code>neuralAudio.preservesPitch = false</code> gesetzt: Bei Faktor <code>0.96</code> sinken nicht nur das Tempo, sondern auch die Vokal-Formanten – so entsteht der warme, tiefe Brust-Resonanzklang wie über ein Shure-SM7B-Studiomikrofon.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-mosaic-100 text-mosaic-600 flex items-center justify-center font-bold text-lg mb-4">3</div>
+          <h3 class="font-serif text-2xl font-bold text-stone-900">Prozedurale Web-Audio-Glocken & Sync-UI</h3>
+          <p class="text-sm text-stone-600 mt-2 leading-relaxed">
+            Zu Beginn jeder Station erzeugt ein Echtzeit-Synthesizer über die <code>Web Audio API</code> (zwei gekoppelte <code>OscillatorNode</code>-Instanzen in Sinus- und Dreieckswellenform mit exponentieller Hüllkurve) einen akustischen Gong: auf Deutsch einen warmen Klosterglockenklang (<code>293.66 Hz</code> D4 + <code>440 Hz</code> A4), auf Russisch einen tiefen Doku-Bassgong (<code>110 Hz</code> A2 + <code>164.81 Hz</code> E3).
+          </p>
+        </div>
+      </div>
+
+      <!-- Technischer Vergleichstabelle DE vs RU -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-sm overflow-x-auto">
+        <h3 class="font-serif text-2xl font-bold text-stone-900 mb-4">Parameter-Matrix: Deutsche vs. Russische Audio-Engine</h3>
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b-2 border-stone-200 text-stone-500 uppercase text-xs">
+              <th class="py-3 pr-4">Merkmal / Parameter</th>
+              <th class="py-3 px-4">🇩🇪 Deutsche Version (<code>sant-pau-audioguide.html</code>)</th>
+              <th class="py-3 pl-4">🇷🇺 Russische Version (<code>sant-pau-audioguide-ru.html</code>)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-200 text-stone-700">
+            <tr>
+              <td class="py-3 pr-4 font-semibold text-stone-900">Primäre Audio-Quelle</td>
+              <td class="py-3 px-4">Web Speech API (<code>de-DE</code>) mit Echtzeit-Satz-Queue</td>
+              <td class="py-3 pl-4">51 lokale Neural-MP3-Dateien (<code>audio_ru/st0_p0.mp3</code> … <code>st5_p8.mp3</code>) + Male-Only WebSpeech Fallback</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-semibold text-stone-900">Sprecher-Modell / Priorität</td>
+              <td class="py-3 px-4"><code>Google Deutsch</code>, <code>Microsoft Stefan</code>, <code>Martin</code>, <code>Markus</code></td>
+              <td class="py-3 pl-4"><code>ru-RU-DmitryNeural</code> (Offline-MP3) + Blacklist gegen weibliche Stimmen (<code>Irina</code>, <code>Svetlana</code>)</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-semibold text-stone-900">Tonhöhe (Pitch / Formante)</td>
+              <td class="py-3 px-4"><code>pitch = 0.82</code> (Preset „Tiefer Bariton“: <code>0.70</code>)</td>
+              <td class="py-3 pl-4">Synthese: <code>-15 Hz</code> + Browser-Formant-Shift: <code>0.96</code> (Preset „Бас-баритон“: <code>0.91</code>)</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-semibold text-stone-900">Sprechtempo (Rate)</td>
+              <td class="py-3 px-4"><code>0.95x</code> (entspanntes Museumstempo)</td>
+              <td class="py-3 pl-4">Synthese: <code>-4 %</code> + Browser-Rate: <code>0.96x</code> + rhetorische Zäsuren an Gedankenstrichen</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4 font-semibold text-stone-900">Stations-Intro-Klang</td>
+              <td class="py-3 px-4">Heller D4/A4-Glockenschlag (1,85 Sek. Ausklang)</td>
+              <td class="py-3 pl-4">Dunkler A2/E3-Studio-Gong (2,25 Sek. Ausklang)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- KAPITEL 3: STILANALYSE SERGEI MINAEV (VIDEO-REFERENZ) -->
+  <section id="minaev-style" class="py-16 border-b border-stone-200 bg-stone-900 text-stone-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-mosaic-400 block">Kapitel 3 • Referenz-Analyse</span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white mt-1">
+            Stimm- & Stilanalyse: Сергей Минаев («Уроки истории»)
+          </h2>
+          <p class="text-stone-400 mt-2 max-w-3xl text-sm sm:text-base">
+            Analyse basierend auf dem Referenzvideo <a href="https://youtu.be/XR3GJrBgtPc?t=347" target="_blank" class="text-mosaic-400 underline hover:text-mosaic-100">youtu.be/XR3GJrBgtPc (ab t=347s)</a> – <em>«Библиотека Ивана Грозного: Самая мистическая загадка русской истории»</em>.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-stone-800/70 rounded-2xl p-6 sm:p-8 border border-stone-700">
+          <h3 class="font-serif text-2xl font-bold text-mosaic-400 mb-4">1. Phonetik & Sprechmelodie</h3>
+          <ul class="space-y-3 text-sm text-stone-300 leading-relaxed">
+            <li><strong class="text-white">Brustresonanz statt Theater-Pathos:</strong> Tiefer, ruhiger Großstadt-Bariton eines Journalisten und Schriftstellers. Die Stimme klingt nah am Mikrofon (Nahbesprechungseffekt).</li>
+            <li><strong class="text-white">Rhythmische Zuspitzung:</strong> Längere, bildhafte Aufzählungen münden abrupt in ultrakurze, trockene Konstatierungen: <em>«Деньги кончились. Вообще. В ноль.»</em></li>
+            <li><strong class="text-white">Dramatische Mikropause vor der Pointe:</strong> Vor jedem Gedankenstrich (<code>—</code>) hält der Sprecher kurz inne, bevor er die Erwartung des Zuhörers bricht (<em>«Спойлер: ничего подобного.»</em>).</li>
+          </ul>
+        </div>
+
+        <div class="bg-stone-800/70 rounded-2xl p-6 sm:p-8 border border-stone-700">
+          <h3 class="font-serif text-2xl font-bold text-mosaic-400 mb-4">2. Dramaturgische Erzähltechnik</h3>
+          <ul class="space-y-3 text-sm text-stone-300 leading-relaxed">
+            <li><strong class="text-white">Kino-Einstieg («Представьте себе картину…»):</strong> Jede Station beginnt wie eine Filmszene mit starken sensorischen Details (Pestfeuer 1401, Straßenbahn Nr. 30 am 7. Juni 1926).</li>
+            <li><strong class="text-white">Fokus auf Geld, Verträge & Psychologie:</strong> Warum verbietet Bankier Пау Жиль Politikern den Zugriff aufs Konto? Wie verkauft man reichen Textilbaronen nach dem Bankrott 1913 „Unsterblichkeit auf Raten“?</li>
+            <li><strong class="text-white">Lebendige Dialog-Inszenierung:</strong> Historische Figuren sprechen in direkter, scharfzüngiger Rede miteinander (z. B. Domènech i Montaner vs. Pariser Buchhalter).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KAPITEL 4: INHALTLICHE STRUKTUR DER 6 STATIONEN -->
+  <section id="stations-spec" class="py-16 border-b border-stone-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600 block">Kapitel 4</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mt-1">
+          Inhaltliche Architektur (Die 6 chronologischen Stationen)
+        </h2>
+        <p class="text-stone-600 mt-2 max-w-3xl text-sm sm:text-base">
+          Jede Station verbindet präzise Architektur- und Medizingeschichte mit konkreten Blickanweisungen vor Ort und einer historischen Anekdote.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Station 1 -->
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-terracotta-600 uppercase mb-2">
+              <span>Station 1 • ~10 Min.</span>
+              <span class="font-mono text-stone-400">st0_p0 … st0_p10</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-stone-900">Haupteingang & Vorplatz</h3>
+            <p class="text-xs text-stone-500 mt-1">Carrer de Cartagena / Avinguda de Gaudí</p>
+            <ul class="mt-4 space-y-1.5 text-xs text-stone-700 list-disc list-inside">
+              <li><strong>1401:</strong> Zusammenlegung der 6 mittelalterlichen Spitäler nach den Pestwellen zum <em>Hospital de la Santa Creu</em> im Raval.</li>
+              <li><strong>1896:</strong> Testament des Pariser Bankiers <strong>Pau Gil</strong> (3 Mio. Gold-Peseten).</li>
+              <li><strong>45°-Protest:</strong> Lluís Domènech i Montaners rebellische Drehung gegen das starre Straßenraster von <strong>Ildefons Cerdà</strong> (Südausrichtung + Sichtachse zur Sagrada Família).</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-600 bg-mosaic-100/50 -mx-6 -mb-6 p-4 rounded-b-2xl">
+            <strong>😉 Anekdote:</strong> Wie Domènech i Montaner den knauserigen Pariser Buchhaltern Gold- und Keramikmosaike als „antiseptische Bakterien-Versiegelung“ verkaufte.
+          </div>
+        </div>
+
+        <!-- Station 2 -->
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-terracotta-600 uppercase mb-2">
+              <span>Station 2 • ~9 Min.</span>
+              <span class="font-mono text-stone-400">st1_p0 … st1_p6</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-stone-900">Administration & Unterwelt</h3>
+            <p class="text-xs text-stone-500 mt-1">Unterirdisches Tunnelgewölbe</p>
+            <ul class="mt-4 space-y-1.5 text-xs text-stone-700 list-disc list-inside">
+              <li><strong>&gt; 1 km Tunnelnetz:</strong> Unsichtbare Verbindung aller Pavillons unter der Erde.</li>
+              <li><strong>Volta Catalana:</strong> Flache katalanische Ziegelgewölbe mit Tageslichtschächten.</li>
+              <li><strong>Zwei-Welten-Prinzip:</strong> Unten klinische Logistik (Küche, Wäsche, Technik, Pathologie), oben ungestörte Parkruhe für die Genesung.</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-600 bg-mosaic-100/50 -mx-6 -mb-6 p-4 rounded-b-2xl">
+            <strong>😉 Anekdote:</strong> Der nächtliche „Grand Prix de Sant Pau“ – heimliche Rollstuhl-Wettrennen der Assistenzärzte im abschüssigen Tunnel und die klappernden Rosenkränze der Ordensschwestern (<em>Darders</em>).
+          </div>
+        </div>
+
+        <!-- Station 3 -->
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-terracotta-600 uppercase mb-2">
+              <span>Station 3 • ~11 Min.</span>
+              <span class="font-mono text-stone-400">st2_p0 … st2_p6</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-stone-900">Die Gartenstadt (Außenbereich)</h3>
+            <p class="text-xs text-stone-500 mt-1">Zentrale Parkachse zwischen den Pavillons</p>
+            <ul class="mt-4 space-y-1.5 text-xs text-stone-700 list-disc list-inside">
+              <li><strong>„Schönheit heilt“:</strong> Vorläufer der modernen <em>Healing Architecture</em> für die Arbeiterklasse Barcelonas.</li>
+              <li><strong>Dimensionen:</strong> 48 Pavillons geplant, 27 realisiert (145 m² Fläche pro Patient; Frauen links/Westen, Männer rechts/Osten).</li>
+              <li><strong>Botanischer Schild:</strong> Eukalyptus, Lavendel, Rosmarin und Kiefer als ätherischer Keim- und Geruchsschutz.</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-600 bg-mosaic-100/50 -mx-6 -mb-6 p-4 rounded-b-2xl">
+            <strong>😉 Anekdote:</strong> Die Falle mit den ungenießbaren Sevillaner Bitterorangen (<em>Pomeranzen</em>), die jeden heimlichen Obstdieb sofort am verzogenen Gesicht verrieten.
+          </div>
+        </div>
+
+        <!-- Station 4 -->
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-terracotta-600 uppercase mb-2">
+              <span>Station 4 • ~11 Min.</span>
+              <span class="font-mono text-stone-400">st3_p0 … st3_p8</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-stone-900">Pavelló de Sant Rafael</h3>
+            <p class="text-xs text-stone-500 mt-1">Historischer Krankensaal der 1920er Jahre</p>
+            <ul class="mt-4 space-y-1.5 text-xs text-stone-700 list-disc list-inside">
+              <li><strong>Hygienedesign:</strong> Abgerundete Wand- und Bodenecken gegen Staub- und Keimnester.</li>
+              <li><strong>Farbpsychologie & Lüftung:</strong> Beruhigende pastellgrüne/aquamarinfarbene Gewölbe und stromlose Konvektionslüftung über Dachrosetten.</li>
+              <li><strong>7.–10. Juni 1926:</strong> Antoni Gaudís Unfall mit der Straßenbahn Linie 30, die verweigerten Taxis und sein Tod im Armensaal.</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-600 bg-mosaic-100/50 -mx-6 -mb-6 p-4 rounded-b-2xl">
+            <strong>😢 Anekdote:</strong> Gaudís berühmte letzte Ablehnung eines Luxuszimmers: <em>„El meu lloc és aquí, entre els pobres“ („Mein Platz ist hier, mitten unter den Armen“).</em>
+          </div>
+        </div>
+
+        <!-- Station 5 -->
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-terracotta-600 uppercase mb-2">
+              <span>Station 5 • ~10 Min.</span>
+              <span class="font-mono text-stone-400">st4_p0 … st4_p7</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-stone-900">Sant Salvador & Tageslicht-OPs</h3>
+            <p class="text-xs text-stone-500 mt-1">Erster Pavillon (1916) & Casa d’Operacions</p>
+            <ul class="mt-4 space-y-1.5 text-xs text-stone-700 list-disc list-inside">
+              <li><strong>Bauzeit 1902–1930:</strong> Finanzkollaps 1913 nach Aufbrauchen des Pau-Gil-Erbes; Rettung durch Verkauf von „Namens-Unsterblichkeit“ an Mäzene.</li>
+              <li><strong>Vater & Sohn:</strong> Nach Lluís Domènechs Tod (1923) vollendet sein Sohn <strong>Pere Domènech i Roura</strong> das Werk bis 1930.</li>
+              <li><strong>Verglaste OPs:</strong> Schattenfreies Nord-Tageslicht wegen Explosionsgefahr von Äther- und Chloroformdämpfen bei elektrischen Funken.</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-600 bg-mosaic-100/50 -mx-6 -mb-6 p-4 rounded-b-2xl">
+            <strong>😉 Anekdote:</strong> „Chirurgen im Schaufenster“ – wie gelangweilte Patienten im Pyjama draußen vor den OP-Glasfronten wie im Fußballstadion jede Naht kommentierten.
+          </div>
+        </div>
+
+        <!-- Station 6 -->
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-terracotta-600 uppercase mb-2">
+              <span>Station 6 • ~9 Min.</span>
+              <span class="font-mono text-stone-400">st5_p0 … st5_p8</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-stone-900">Kuppelsaal & Portalblick</h3>
+            <p class="text-xs text-stone-500 mt-1">1. OG Administrationsgebäude • Balkonfenster</p>
+            <ul class="mt-4 space-y-1.5 text-xs text-stone-700 list-disc list-inside">
+              <li><strong>Klinikbetrieb bis 2009:</strong> Bürgerkriegslazarett, erste Herztransplantation Spaniens (1984), Auszug in den Nord-Neubau im Juni 2009.</li>
+              <li><strong>UNESCO-Welterbe (1997):</strong> Fünfjährige Jahrhundert-Restaurierung (2009–2014).</li>
+              <li><strong>Abschiedsblick:</strong> Direkte Sichtachse über die <em>Avinguda de Gaudí</em> zur <em>Sagrada Família</em> – der Dialog zwischen Gaudí und Domènech i Montaner.</li>
+            </ul>
+          </div>
+          <div class="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-600 bg-mosaic-100/50 -mx-6 -mb-6 p-4 rounded-b-2xl">
+            <strong>😉 Anekdote:</strong> „Der Schatz hinter der Rigipsdecke“ – wie die hässlichen abgehängten Zwischendecken der Franco-Zeit (1960er/70er) die Originalkeramik von 1910 wie eine luftdichte Zeitkapsel bewahrten.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KAPITEL 5: DATEISTRUKTUR & WARTUNG -->
+  <section id="files" class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-ceramic-600 block">Kapitel 5</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mt-1">
+          Verzeichnis- & Dateistruktur im Projektordner
+        </h2>
+        <p class="text-stone-600 mt-2 text-sm sm:text-base">
+          Alle Dateien liegen lokal und portabel im Ordner <code>D:\Development\Reisen\Barcelone\</code>. Für die Mitnahme auf das Smartphone genügt es, den Ordner samt Unterordner <code>audio_ru/</code> zu kopieren.
+        </p>
+      </div>
+
+      <div class="bg-stone-900 text-stone-200 rounded-3xl p-6 sm:p-8 font-mono text-xs sm:text-sm shadow-xl border border-stone-800 overflow-x-auto">
+<pre class="leading-relaxed">
+<span class="text-mosaic-400 font-bold">D:\Development\Reisen\Barcelone\</span>
+│
+├── <a href="sant-pau-audioguide.html" class="text-terracotta-500 underline font-bold">sant-pau-audioguide.html</a>       <span class="text-stone-400"># 🇩🇪 Deutsche Landing-Page & Web-Speech-Bariton-Audioguide</span>
+├── <a href="sant-pau-audioguide-ru.html" class="text-mosaic-400 underline font-bold">sant-pau-audioguide-ru.html</a>    <span class="text-stone-400"># 🇷🇺 Russische Landing-Page im Stil von С. Минаев (Neural MP3 Player)</span>
+├── <a href="dokumentation.html" class="text-ceramic-200 underline font-bold">dokumentation.html</a>             <span class="text-stone-400"># 📚 Diese technische & inhaltliche Projektdokumentation</span>
+│
+└── <span class="text-ceramic-500 font-bold">audio_ru\</span>                      <span class="text-stone-400"># 🎙️ 51 vorab generierte neuronale Bariton-MP3s (ru-RU-DmitryNeural, -15Hz)</span>
+    ├── st0_p0.mp3 … st0_p10.mp3   <span class="text-stone-400"># Station 1 (10 Absätze + Anekdote st0_p10.mp3)</span>
+    ├── st1_p0.mp3 … st1_p6.mp3    <span class="text-stone-400"># Station 2 (6 Absätze + Anekdote st1_p6.mp3)</span>
+    ├── st2_p0.mp3 … st2_p6.mp3    <span class="text-stone-400"># Station 3 (6 Absätze + Anekdote st2_p6.mp3)</span>
+    ├── st3_p0.mp3 … st3_p8.mp3    <span class="text-stone-400"># Station 4 (8 Absätze + Anekdote st3_p8.mp3)</span>
+    ├── st4_p0.mp3 … st4_p7.mp3    <span class="text-stone-400"># Station 5 (7 Absätze + Anekdote st4_p7.mp3)</span>
+    └── st5_p0.mp3 … st5_p8.mp3    <span class="text-stone-400"># Station 6 (8 Absätze + Anekdote st5_p8.mp3)</span>
+</pre>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

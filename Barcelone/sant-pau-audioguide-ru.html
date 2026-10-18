@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сан-Пау (Барселона) – Исторический аудиогид в стиле документального сторителлинга</title>
+  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans (с поддержкой кириллицы) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terracotta: {
+              50: '#fdf5f3',
+              100: '#fbe8e4',
+              500: '#c85a43',
+              600: '#b04630',
+              700: '#923624',
+              800: '#792e20',
+              900: '#4a1b13',
+            },
+            ceramic: {
+              50: '#f2f9f8',
+              100: '#ddefec',
+              200: '#bce0da',
+              500: '#3d8b80',
+              600: '#2d6e65',
+              700: '#255852',
+              800: '#1f4742',
+              900: '#193a36',
+            },
+            mosaic: {
+              100: '#fbf3dc',
+              400: '#deb352',
+              500: '#c99733',
+              600: '#a87822',
+            },
+            parchment: '#faf6f0'
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #141210;
+      color: #f5efe6;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(176, 70, 48, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 85% 30%, rgba(45, 110, 101, 0.14) 0%, transparent 50%);
+    }
+
+    /* Каталонская мозаика Trencadís */
+    .mosaic-border {
+      height: 6px;
+      background: repeating-linear-gradient(
+        90deg,
+        #b04630 0px, #b04630 24px,
+        #deb352 24px, #deb352 48px,
+        #2d6e65 48px, #2d6e65 72px,
+        #292524 72px, #292524 84px
+      );
+    }
+
+    /* Активный абзац при чтении */
+    .paragraph-block {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 3px solid transparent;
+    }
+    .paragraph-block:hover {
+      background-color: rgba(222, 179, 82, 0.07);
+      border-left-color: rgba(222, 179, 82, 0.45);
+    }
+    .paragraph-block.speaking-active {
+      background-color: rgba(200, 90, 67, 0.16);
+      border-left: 4px solid #deb352;
+      padding-left: 1.1rem;
+      border-radius: 0 0.75rem 0.75rem 0;
+      box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Анимация эквалайзера */
+    @keyframes eqBar {
+      0%, 100% { transform: scaleY(0.25); }
+      50% { transform: scaleY(1); }
+    }
+    .eq-bar {
+      width: 3px;
+      background-color: #deb352;
+      border-radius: 9999px;
+      transform-origin: bottom;
+      transform: scaleY(0.25);
+      transition: transform 0.2s ease;
+    }
+    .is-playing .eq-bar:nth-child(1) { animation: eqBar 0.7s infinite 0.1s; }
+    .is-playing .eq-bar:nth-child(2) { animation: eqBar 0.55s infinite 0.25s; }
+    .is-playing .eq-bar:nth-child(3) { animation: eqBar 0.8s infinite 0.05s; }
+    .is-playing .eq-bar:nth-child(4) { animation: eqBar 0.6s infinite 0.35s; }
+    .is-playing .eq-bar:nth-child(5) { animation: eqBar 0.75s infinite 0.15s; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1c1917; }
+    ::-webkit-scrollbar-thumb { background: #b04630; border-radius: 4px; }
+  </style>
+</head>
+<body class="font-sans antialiased pb-44 selection:bg-terracotta-500 selection:text-white">
+
+  <div class="mosaic-border sticky top-0 z-50"></div>
+
+  <!-- Навигация -->
+  <header class="sticky top-[6px] z-40 backdrop-blur-md bg-stone-950/90 border-b border-stone-800 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <a href="#top" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-terracotta-600 text-white flex items-center justify-center font-serif font-bold text-xl shadow-sm group-hover:bg-mosaic-500 transition-colors">
+          SP
+        </div>
+        <div>
+          <span class="text-[11px] uppercase tracking-widest text-mosaic-400 font-semibold block">Уроки истории • Барселона</span>
+          <span class="font-serif text-lg font-bold text-stone-100 leading-none">Госпиталь Сан-Пау (Recinte Modernista)</span>
+        </div>
+      </a>
+
+      <!-- Быстрый переход по станциям -->
+      <nav class="hidden xl:flex items-center gap-1 text-xs font-medium text-stone-400">
+        <a href="#station-1" class="px-3 py-1.5 rounded-full hover:bg-stone-800 hover:text-white transition">1. Главный вход</a>
+        <a href="#station-2" class="px-3 py-1.5 rounded-full hover:bg-stone-800 hover:text-white transition">2. Подземелья</a>
+        <a href="#station-3" class="px-3 py-1.5 rounded-full hover:bg-stone-800 hover:text-white transition">3. Город-сад</a>
+        <a href="#station-4" class="px-3 py-1.5 rounded-full hover:bg-stone-800 hover:text-white transition">4. Сан-Рафаэль и Гауди</a>
+        <a href="#station-5" class="px-3 py-1.5 rounded-full hover:bg-stone-800 hover:text-white transition">5. Банкротство и хирургия</a>
+        <a href="#station-6" class="px-3 py-1.5 rounded-full hover:bg-stone-800 hover:text-white transition">6. Купольный зал</a>
+      </nav>
+
+      <!-- Переключатель языка (RU / DE) & Старт -->
+      <div class="flex items-center gap-2">
+        <a href="dokumentation.html" class="px-3 py-1.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold border border-stone-700 transition">
+          📚 Документация
+        </a>
+        <a href="sant-pau-audioguide.html" class="px-3 py-1.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold border border-stone-700 transition">
+          🇩🇪 DE-Version
+        </a>
+        <button onclick="startFullTour()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-terracotta-600 hover:bg-terracotta-500 text-white text-xs sm:text-sm font-semibold shadow-md transition-all cursor-pointer">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <span>Начать выпуск</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION В СТИЛЕ СТУДИЙНОГО ИСТОРИЧЕСКОГО РАССЛЕДОВАНИЯ -->
+  <section id="top" class="relative overflow-hidden pt-10 pb-16 md:py-24 border-b border-stone-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-900 border border-mosaic-500/40 text-mosaic-400 text-xs font-semibold tracking-wide uppercase">
+            <span class="w-2 h-2 rounded-full bg-terracotta-500 animate-pulse"></span>
+            Стиль: Исторический сторителлинг (MINAEV LIVE) • 60 минут
+          </div>
+
+          <h1 class="font-serif text-4xl sm:text-6xl lg:text-[3.85rem] font-bold text-white leading-[1.08] tracking-tight">
+            Сан-Пау: Главная <span class="text-mosaic-400 italic font-normal">архитектурная афера</span> во имя жизни.
+          </h1>
+
+          <p class="text-lg sm:text-xl text-stone-300 leading-relaxed max-w-2xl">
+            Как каталонский гений перехитрил парижских банкиров, развернул девять кварталов Барселоны на 45 градусов назло главному инженеру страны, прорыл километр тайных подземных галерей — и почему именно здесь, на койке для нищих, умер Антонио Гауди.
+          </p>
+
+          <!-- Плашки стиля и голоса -->
+          <div class="flex flex-wrap gap-3 pt-2">
+            <div class="bg-stone-900/90 border border-stone-800 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+              <span class="text-2xl">🎙️</span>
+              <div>
+                <div class="text-[11px] uppercase tracking-wider text-stone-400 font-semibold">Тембр и подача</div>
+                <div class="text-sm font-bold text-stone-100">Низкий бархатный баритон (Pitch 0.80 • Rate 0.95x)</div>
+              </div>
+            </div>
+            <div class="bg-stone-900/90 border border-stone-800 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+              <span class="text-2xl">🎬</span>
+              <div>
+                <div class="text-[11px] uppercase tracking-wider text-stone-400 font-semibold">Драматургия</div>
+                <div class="text-sm font-bold text-stone-100">Эффект присутствия, ирония, деньги и тайны</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Кнопки старта -->
+          <div class="pt-4 flex flex-wrap items-center gap-4">
+            <button onclick="playStation(0, 0)" class="px-7 py-4 rounded-2xl bg-terracotta-600 hover:bg-terracotta-500 text-white font-semibold text-base shadow-xl shadow-terracotta-600/25 flex items-center gap-3 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Включить Станцию 1</span>
+            </button>
+            <a href="#audio-settings" class="px-6 py-4 rounded-2xl bg-stone-900 hover:bg-stone-800 text-stone-200 border border-stone-700 font-semibold text-base flex items-center gap-2 transition-all">
+              <span>Настроить голос (Dmitry / Google RU)</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Правая колонка: Интерактивная карта 45 градусов -->
+        <div class="lg:col-span-5">
+          <div class="bg-stone-900 rounded-3xl p-6 shadow-2xl border border-stone-800 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-widest text-mosaic-400 block">Интерактивная схема маршрута</span>
+                <h2 class="font-serif text-2xl font-bold text-white">Бунт в 45° против сетки Серда</h2>
+              </div>
+              <span class="text-xs bg-stone-800 text-mosaic-400 font-semibold px-2.5 py-1 rounded-md border border-stone-700">
+                Нажмите на номер
+              </span>
+            </div>
+
+            <div class="relative bg-[#1c1917] rounded-2xl p-4 border border-stone-800">
+              <svg viewBox="0 0 400 420" class="w-full h-auto">
+                <defs>
+                  <pattern id="cerdaGridRu" width="55" height="55" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    <rect width="46" height="46" rx="6" fill="none" stroke="#332e2a" stroke-width="1.5" />
+                  </pattern>
+                </defs>
+                <rect width="400" height="420" fill="url(#cerdaGridRu)" />
+
+                <line x1="200" y1="295" x2="75" y2="405" stroke="#deb352" stroke-width="4" stroke-dasharray="6 4" />
+                <text x="112" y="382" fill="#deb352" font-size="10" font-weight="700" transform="rotate(-41 112 382)">Авенида Гауди (ось 45°)</text>
+
+                <g transform="translate(26, 368)">
+                  <rect x="0" y="10" width="64" height="32" rx="6" fill="#792e20" stroke="#deb352" stroke-width="1" />
+                  <text x="32" y="24" text-anchor="middle" fill="#ffffff" font-size="8" font-weight="bold">САГРАДА</text>
+                  <text x="32" y="35" text-anchor="middle" fill="#fbd38d" font-size="8" font-weight="bold">ФАМИЛИЯ</text>
+                </g>
+
+                <g transform="translate(85, 20)">
+                  <rect x="0" y="0" width="230" height="275" rx="14" fill="#172a27" stroke="#3d8b80" stroke-width="2.5" />
+                  <line x1="115" y1="20" x2="115" y2="255" stroke="#3d8b80" stroke-width="1.5" stroke-dasharray="3 3" />
+                  <path d="M115 240 L115 65 L165 65" fill="none" stroke="#c85a43" stroke-width="3" stroke-opacity="0.7" />
+
+                  <rect x="25" y="50" width="42" height="24" rx="4" fill="#233d39" stroke="#3d8b80" />
+                  <rect x="25" y="95" width="42" height="24" rx="4" fill="#233d39" stroke="#3d8b80" />
+                  <rect x="25" y="140" width="42" height="24" rx="4" fill="#233d39" stroke="#3d8b80" />
+
+                  <rect x="163" y="50" width="42" height="24" rx="4" fill="#233d39" stroke="#3d8b80" />
+                  <rect x="163" y="95" width="42" height="24" rx="4" fill="#2d6e65" stroke="#deb352" stroke-width="1.5" />
+                  <rect x="163" y="140" width="42" height="24" rx="4" fill="#2d6e65" stroke="#deb352" stroke-width="1.5" />
+
+                  <rect x="92" y="105" width="46" height="30" rx="6" fill="#42331b" stroke="#deb352" stroke-width="2" />
+                  <path d="M35 220 L195 220 L195 252 L35 252 Z" fill="#b04630" />
+
+                  <!-- Точки станций -->
+                  <g onclick="playStation(0,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="115" cy="264" r="13" fill="#c85a43" stroke="#fff" stroke-width="2" />
+                    <text x="115" y="268" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">1</text>
+                  </g>
+                  <g onclick="playStation(1,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="82" cy="205" r="13" fill="#2d6e65" stroke="#fff" stroke-width="2" />
+                    <text x="82" y="209" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">2</text>
+                  </g>
+                  <g onclick="playStation(2,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="115" cy="172" r="13" fill="#3d8b80" stroke="#fff" stroke-width="2" />
+                    <text x="115" y="176" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">3</text>
+                  </g>
+                  <g onclick="playStation(3,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="184" cy="107" r="13" fill="#c85a43" stroke="#fff" stroke-width="2" />
+                    <text x="184" y="111" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">4</text>
+                  </g>
+                  <g onclick="playStation(4,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="148" cy="148" r="13" fill="#c99733" stroke="#fff" stroke-width="2" />
+                    <text x="148" y="152" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">5</text>
+                  </g>
+                  <g onclick="playStation(5,0)" class="cursor-pointer hover:opacity-90">
+                    <circle cx="115" cy="234" r="13" fill="#deb352" stroke="#141210" stroke-width="2" />
+                    <text x="115" y="238" text-anchor="middle" fill="#141210" font-size="11" font-weight="bold">6</text>
+                  </g>
+                </g>
+
+                <g transform="translate(362, 34)">
+                  <circle cx="0" cy="0" r="16" fill="#292524" stroke="#57534e" />
+                  <text x="0" y="4" text-anchor="middle" font-size="10" font-weight="bold" fill="#deb352">С ↑</text>
+                </g>
+              </svg>
+            </div>
+            <p class="text-xs text-stone-400 mt-3 leading-relaxed">
+              Нажмите на любую цифру (1–6) на карте, чтобы сразу перейти к нужной локации и запустить рассказ.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- АНАЛИЗ СТИЛЯ И ПУЛЬТ УПРАВЛЕНИЯ ГОЛОСОМ -->
+  <section id="audio-settings" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+    <div class="bg-stone-900/95 text-stone-100 rounded-3xl p-6 sm:p-8 shadow-2xl border border-stone-700/80">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-stone-800">
+        <div>
+          <div class="inline-flex items-center gap-2 text-mosaic-400 text-xs font-bold uppercase tracking-widest mb-1">
+            <span>🎛️ Анализ голоса из видео (t=347s) и настройка синтезатора (ru-RU)</span>
+          </div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">
+            Профиль: «Документальный баритон / Исторический детектив»
+          </h2>
+          <p class="text-xs sm:text-sm text-stone-400 mt-1 max-w-3xl">
+            Используется специально сгенерированный **нейросетевой мужской баритон** (`ru-RU-DmitryNeural`, базовое понижение `-15 Hz` + аналоговый сдвиг формант для бархатного грудного резонанса Сергея Минаева). Женские системные голоса полностью заблокированы.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 shrink-0">
+          <button onclick="voiceConfig.formantShift=true; applyVoicePreset(0.96, 0.96)" class="px-3.5 py-2 rounded-xl bg-terracotta-600 text-white text-xs font-semibold transition cursor-pointer">
+            🎙️ Тембр Минаева (Форманта 0.96 / 0.96x)
+          </button>
+          <button onclick="voiceConfig.formantShift=true; applyVoicePreset(0.91, 0.92)" class="px-3.5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold border border-stone-700 transition cursor-pointer">
+            🥃 Глубокий вечерний бас-баритон (0.91 / 0.92x)
+          </button>
+          <button onclick="voiceConfig.formantShift=false; applyVoicePreset(1.00, 1.02)" class="px-3.5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold border border-stone-700 transition cursor-pointer">
+            ⚡ Быстрый репортаж (1.00 / 1.02x)
+          </button>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-6 items-center">
+        <div class="sm:col-span-2">
+          <label for="voiceSelect" class="block text-xs uppercase tracking-wider text-stone-400 font-semibold mb-2">
+            Студийный мужской нейро-голос (MP3 + Формантный фильтр)
+          </label>
+          <select id="voiceSelect" class="w-full bg-stone-800 border border-stone-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-mosaic-400">
+            <option value="neural_minaev">★ Студийный Нейро-Баритон: Тембр С. Минаева</option>
+          </select>
+          <div id="voicePriorityHint" class="text-[11px] text-mosaic-400 mt-1.5">
+            ✓ Активен реальный мужской нейро-баритон (папка audio_ru/)
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-2">
+            <span class="text-stone-400 uppercase tracking-wider">Глубина тембра (Форманта)</span>
+            <span id="pitchValueDisplay" class="text-mosaic-400 font-mono">0.96</span>
+          </div>
+          <input id="pitchSlider" type="range" min="0.84" max="1.08" step="0.01" value="0.96"
+            oninput="updateVoiceParams()"
+            class="w-full accent-terracotta-500 cursor-pointer" />
+          <div class="flex justify-between text-[10px] text-stone-500 mt-1">
+            <span>0.88 (Густой бас)</span>
+            <span>0.96 (Минаев)</span>
+            <span>1.00</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-2">
+            <span class="text-stone-400 uppercase tracking-wider">Темп рассказа (Rate)</span>
+            <span id="rateValueDisplay" class="text-ceramic-200 font-mono">0.96x</span>
+          </div>
+          <input id="rateSlider" type="range" min="0.80" max="1.20" step="0.01" value="0.96"
+            oninput="updateVoiceParams()"
+            class="w-full accent-ceramic-500 cursor-pointer" />
+          <div class="flex justify-between text-[10px] text-stone-500 mt-1">
+            <span>0.85x</span>
+            <span>0.96x (Студия)</span>
+            <span>1.15x</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ОСНОВНОЙ КОНТЕНТ: 6 СТАНЦИЙ -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 space-y-20" id="stationsContainer"></main>
+
+  <!-- ТАБЛИЦА МАРШРУТА -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+    <div class="bg-stone-900 rounded-3xl p-6 sm:p-10 shadow-xl border border-stone-800">
+      <span class="text-xs font-bold uppercase tracking-widest text-mosaic-400 block mb-1">Навигация по выпуску</span>
+      <h2 class="font-serif text-3xl font-bold text-white mb-6">Тайминг маршрута (около 60 минут на месте)</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-stone-800 text-stone-400 uppercase text-xs">
+              <th class="py-3 pr-4">Эпизод</th>
+              <th class="py-3 px-4">Локация</th>
+              <th class="py-3 px-4">Главный конфликт и исторический анекдот</th>
+              <th class="py-3 pl-4 text-right">Время</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-800/80 text-stone-300">
+            <tr class="hover:bg-stone-800/50 cursor-pointer" onclick="playStation(0,0)">
+              <td class="py-3.5 pr-4 font-bold text-mosaic-400">Станция 1</td>
+              <td class="py-3.5 px-4 font-medium text-white">Главный вход и площадь</td>
+              <td class="py-3.5 px-4">Чума 1401 года, миллионы банкира Пау Жиля, бунт в 45° против Серда • <em>Антисептическая мозаика</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">~10 мин.</td>
+            </tr>
+            <tr class="hover:bg-stone-800/50 cursor-pointer" onclick="playStation(1,0)">
+              <td class="py-3.5 pr-4 font-bold text-mosaic-400">Станция 2</td>
+              <td class="py-3.5 px-4 font-medium text-white">Администрация и подземелья</td>
+              <td class="py-3.5 px-4">Секретная сеть тоннелей (&gt; 1 км), логистика боли внизу и рай наверху • <em>Ночной Гран-при на каталках</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">~9 мин.</td>
+            </tr>
+            <tr class="hover:bg-stone-800/50 cursor-pointer" onclick="playStation(2,0)">
+              <td class="py-3.5 pr-4 font-bold text-mosaic-400">Станция 3</td>
+              <td class="py-3.5 px-4 font-medium text-white">Город-сад (Парк)</td>
+              <td class="py-3.5 px-4">Теория «Красота лечит», 48 задуманных павильонов против 27 построенных, эфирный щит • <em>Ловушка с горькими апельсинами</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">~11 мин.</td>
+            </tr>
+            <tr class="hover:bg-stone-800/50 cursor-pointer" onclick="playStation(3,0)">
+              <td class="py-3.5 pr-4 font-bold text-mosaic-400">Станция 4</td>
+              <td class="py-3.5 px-4 font-medium text-white">Павильон Сан-Рафаэль</td>
+              <td class="py-3.5 px-4">Палата 1920-х без единого прямого угла, трамвай № 30 и гибель Антонио Гауди (1926) • <em>«Моё место — среди нищих»</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">~11 мин.</td>
+            </tr>
+            <tr class="hover:bg-stone-800/50 cursor-pointer" onclick="playStation(4,0)">
+              <td class="py-3.5 pr-4 font-bold text-mosaic-400">Станция 5</td>
+              <td class="py-3.5 px-4 font-medium text-white">Павильон Сан-Сальвадор и ОП</td>
+              <td class="py-3.5 px-4">Финансовый крах 1913 года, торговля тщеславием, сын Пере Доменек-и-Роура • <em>Хирурги в аквариуме</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">~10 мин.</td>
+            </tr>
+            <tr class="hover:bg-stone-800/50 cursor-pointer" onclick="playStation(5,0)">
+              <td class="py-3.5 pr-4 font-bold text-mosaic-400">Станция 6</td>
+              <td class="py-3.5 px-4 font-medium text-white">Купольный зал и балкон</td>
+              <td class="py-3.5 px-4">Переезд 2009 года, реставрация ЮНЕСКО и дуэль взглядов с Гауди • <em>Клад за советским гипсокартоном Франко</em></td>
+              <td class="py-3.5 pl-4 text-right font-mono">~9 мин.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKY BOTTOM AUDIO PLAYER BAR -->
+  <div id="stickyPlayer" class="fixed bottom-0 inset-x-0 z-50 bg-stone-950/95 backdrop-blur-xl text-white border-t border-stone-800 shadow-2xl transition-all">
+    <div class="w-full h-1.5 bg-stone-800 cursor-pointer" onclick="seekParagraph(event)">
+      <div id="progressBar" class="h-full bg-gradient-to-r from-terracotta-500 via-mosaic-400 to-ceramic-500 transition-all duration-300" style="width: 0%"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3.5 w-full sm:w-auto justify-between sm:justify-start">
+        <div class="flex items-center gap-3">
+          <div id="eqContainer" class="w-10 h-10 rounded-xl bg-stone-900 border border-stone-700 flex items-end justify-center gap-0.5 p-2">
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+            <div class="eq-bar h-full"></div>
+          </div>
+          <div>
+            <div id="playerStationLabel" class="text-[11px] font-bold uppercase tracking-wider text-mosaic-400">
+              Готов к воспроизведению • Станция 1 из 6
+            </div>
+            <div id="playerTitleLabel" class="text-sm font-serif font-bold text-white truncate max-w-[240px] sm:max-w-md">
+              Главный вход и площадь
+            </div>
+          </div>
+        </div>
+
+        <label class="inline-flex items-center gap-1.5 text-xs text-stone-400 cursor-pointer sm:hidden">
+          <input type="checkbox" id="autoScrollToggleMobile" checked onchange="syncAutoScroll(this.checked)" class="accent-terracotta-500 rounded">
+          <span>Следить</span>
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="prevStation()" title="Предыдущая станция" class="p-2 rounded-full text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+
+        <button onclick="prevParagraph()" title="Предыдущий абзац" class="p-2 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+
+        <button id="mainPlayBtn" onclick="togglePlayPause()" class="w-12 h-12 rounded-full bg-terracotta-600 hover:bg-terracotta-500 text-white flex items-center justify-center shadow-lg shadow-terracotta-600/30 transition transform active:scale-95 cursor-pointer">
+          <svg id="playIcon" class="w-6 h-6 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pauseIcon" class="w-6 h-6 fill-current hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+
+        <button onclick="stopAudio()" title="Стоп" class="p-2 rounded-full text-stone-400 hover:text-red-400 hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+        </button>
+
+        <button onclick="nextParagraph()" title="Следующий абзац" class="p-2 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <button onclick="nextStation()" title="Следующая станция" class="p-2 rounded-full text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+
+      <div class="hidden sm:flex items-center gap-4 text-xs text-stone-400">
+        <span id="paragraphCounter" class="font-mono bg-stone-900 px-2.5 py-1 rounded-md border border-stone-800">
+          Абзац 1 / 10
+        </span>
+        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+          <input type="checkbox" id="autoScrollToggleDesktop" checked onchange="syncAutoScroll(this.checked)" class="accent-terracotta-500 rounded">
+          <span>Автопрокрутка текста</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- СЦЕНАРИЙ В СТИЛЕ СЕРГЕЯ МИНАЕВА («УРОКИ ИСТОРИИ») + WEB SPEECH ENGINE -->
+  <script>
+    const stationsData = [
+      {
+        id: "station-1",
+        number: 1,
+        title: "Главный вход и площадь: Чумной союз, миллионы из Парижа и бунт в 45 градусов",
+        subtitle: "Как эпидемия 1401 года, завещание подозрительного банкира Пау Жиля и ненависть архитектора к прямым углам создали самый необычный госпиталь в истории человечества.",
+        location: "Перед коваными главными воротами (пересечение Carrer de Cartagena и Avinguda de Gaudí)",
+        duration: "около 10 мин.",
+        tags: ["Чума 1401 года", "Банкир Пау Жиль", "Протест 45° против Серда", "Ось на Саграда Фамилия"],
+        lookPrompt: "Остановитесь на площади перед входом. Посмотрите сначала на часовую башню и золотистый мозаичный фриз на фасаде, а затем повернитесь спиной к воротам — вдоль проспекта Авенида Гауди.",
+        paragraphs: [
+          "Представьте себе картину. Вы стоите посреди Барселоны перед гигантским замком из красного кирпича. Острые готические шпили, сияющая на солнце золотая и лазурная мозаика, мраморные ангелы, витражи, резные гербы. Если бы вас привезли сюда с завязанными глазами и сняли повязку прямо сейчас — что бы вы подумали? Что перед вами резиденция эксцентричного испанского гранда? Королевский театр? Кафедральный собор? Спойлер: ничего подобного. Перед вами — городская больница для бедных.",
+          "И вот тут начинается самое интересное. Чтобы понять, каким образом в начале двадцатого века в Барселоне появился этот дворец для нищих, нам нужно отмотать плёнку сильно назад. В тысяча четыреста первый год. Представьте себе средневековую Барселону конца четырнадцатого — начала пятнадцатого веков. Город только что пережил несколько чудовищных волн Чёрной смерти — бубонной чумы. В узких, сырых, зловонных переулках старого города умирают тысячи людей. В городе работают шесть крошечных средневековых приютов-богаделен, которые вдобавок бесконечно делят между собой бюджеты и полномочия.",
+          "В тысяча четыреста первом году «Совет ста» — главный муниципальный орган Барселоны — и епископство понимают: если ничего не изменить, город просто вымрет. Они принимают жёсткое управленческое решение и сливают все шесть средневековых лечебниц в один-единственный центральный госпиталь. Его называют Оспиталь-де-ла-Санта-Креу — Госпиталь Святого Креста — в самом сердце нынешнего квартала Раваль. Почти пятьсот лет это мрачное готическое здание верой и правдой спасало Барселону. Кстати, в девятнадцатом веке за больными там впервые стали ухаживать монахини из Германии — сёстры милосердия Святого Викентия де Поля, которых барселонцы до сих пор называют «Дардерс».",
+          "Но к концу девятнадцатого века старый готический госпиталь превратился в настоящий филиал ада. Промышленная революция загнала в Барселону сотни тысяч рабочих. Пастер и Кох уже открыли бактерии и микробы, а в каменном мешке четырнадцатого века нет ни вентиляции, ни канализации, ни солнечного света. Смертность зашкаливает. Нужно строить новую больницу. Но есть одна классическая проблема: в городской казне Барселоны денег нет. Вообще. В ноль.",
+          "И вот здесь в наш сюжет входит человек, который изменит всё. Его зовут Пау Жиль-и-Серра. Уроженец Барселоны, который уехал в Париж, сделал там головокружительную карьеру банкира и сколотил абсолютно баснословное состояние. Убеждённый холостяк, человек глубоко религиозный и при этом — как любой крупный финансист девятнадцатого века — крайне недоверчивый к чиновникам. Тридцатого апреля тысяча восемьсот девяносто шестого года Пау Жиль умирает в Париже. Вскрывают его завещание — и вся Барселона замирает.",
+          "Пау Жиль завещает половину своего состояния — больше трёх миллионов золотых песет, по тем временам сумма просто космическая — на строительство в Барселоне новой, ультрасовременной больницы. Но старый банкир ставит три железных условия. Первое: больница должна носить имя его небесного покровителя — апостола Павла, по-каталонски Сан-Пау. Именно поэтому после слияния со старым госпиталем комплекс называется Госпиталь Святого Креста и Святого Павла. Второе условие, чисто банкирское: ни один барселонский чиновник или депутат не имеет права прикасаться к этим деньгам — стройкой управляет специальный комитет душеприказчиков из Парижа. И третье: это должна быть самая передовая клиника в Европе.",
+          "Кому в тысяча девятьсот первом году можно поручить такой проект? Только одному человеку в Каталонии — Льюису Доменек-и-Монтанеру. Сегодня туристы знают в основном Антонио Гауди. Но в начале двадцатого века именно Доменек-и-Монтанер был главным интеллектуальным тяжеловесом Барселоны: директор школы архитектуры, историк, политик, гений каталонского модернизма и автор Дворца каталонской музыки.",
+          "И первое же, что делает Доменек-и-Монтанер, получив три миллиона песет и девять городских кварталов земли — он устраивает дерзкий архитектурный бунт. Повернитесь сейчас на секунду спиной к зданию госпиталя и посмотрите вниз по бульвару Авенида Гауди. В самом конце этого зелёного коридора вы видите башни Саграда Фамилия.",
+          "А теперь посмотрите на перекрёсток прямо у ваших ног. С тысяча восемьсот пятьдесят девятого года вся новая Барселона — район Эшампле — застраивалась по железному, математическому плану инженера Ильдефонса Серда. Идеальная шахматная доска. Все улицы пересекаются строго под прямым углом, все кварталы — одинаковые восьмиугольники. Но Доменек-и-Монтанер терпеть не мог эту казарменную геометрию Серда! Он считал её бездушной и вредной для больных.",
+          "И что он делает? Он берёт гигантский участок из девяти кварталов и разворачивает весь свой больничный город ровно на сорок пять градусов поперёк всей уличной сетки Барселоны! Казалось бы — просто жест художника-бунтаря? Ничего подобного. За этим стоял холодный медицинский расчёт: развернув комплекс на сорок пять градусов, Доменек выставил фасады всех больничных павильонов строго на юг — под максимальное зимнее и летнее солнце. А свежий морской бриз со Средиземного моря начал продувать весь парк по диагонали, вымывая спёртый воздух. При этом он пробил прямую визуальную ось прямо на строящийся храм Гауди: внизу — храм Бога, наверху — храм Науки и Милосердия."
+        ],
+        anecdoteTitle: "Афера с «антисептической мозаикой» против парижских бухгалтеров",
+        anecdoteText: "Давайте зафиксируем один блестящий эпизод. Вспомните: деньги на стройку выделяют парижские душеприказчики банкира Пау Жиля. Это сухие, прагматичные финансисты в чёрных сюртуках. И вот они приезжают в Барселону, открывают сметы Доменек-и-Монтанера, видят там тысячи квадратных метров цветной керамики, золочёную мозаику, мраморных ангелов работы скульпторов Пау Гаргальо и Эусеби Арнау, витражи и горгулий — и хватаются за сердце. «Месье Доменек! — кричат они. — Вы в своём уме?! Мы строим больницу для нищих матросов и прачек, а не Гранд-Опера! Немедленно вычеркните всю эту художественную роскошь!» Любой другой архитектор начал бы спорить об искусстве. Но Доменек-и-Монтанер был гением переговоров. Он спокойно поправил очки, достал папку с медицинскими отчётами и ледяным тоном учёного заявил: «Господа, какая роскошь? О чём вы говорите? Глазурованная керамическая плитка и мозаика на фасадах — это новейшее антисептическое покрытие! В пористом камне живут туберкулёзные бациллы, а с гладкой глазури их бесплатно смывает первый же дождь! А яркие цвета — это научно доказанная цветотерапия против больничной меланхолии!» Парижским бухгалтерам просто нечем было крыть. Им пришлось подписать счета и оплатить каждую цветную плитку по графе «санитарно-гигиеническая дезинфекция». Так что, глядя на этот роскошный фасад, знайте: перед вами самая красивая санитарная обработка в мировой истории.",
+        walkInstruction: "Пройдите через вход для посетителей и спуститесь на нижний уровень — в систему белых сводчатых подземных тоннелей. Там включите Станцию 2."
+      },
+      {
+        id: "station-2",
+        number: 2,
+        title: "Административный корпус и Тайный подземный город",
+        subtitle: "Более одного километра подземных галерей: как Доменек-и-Монтанер спрятал боль, смерть и логистику под землю.",
+        location: "В сводчатом подземном тоннеле, облицованном белой плиткой, под главным зданием и садами",
+        duration: "около 9 мин.",
+        tags: ["Тоннели > 1 км", "Каталонский свод", "Двухуровневая логистика", "Стерильный кафель"],
+        lookPrompt: "Обратите внимание на плоские кирпичные своды потолка («каталонский свод»), световые колодцы наверху и отсутствие острых углов на стыках стен.",
+        paragraphs: [
+          "Почувствуйте, как мгновенно изменились звук и температура. Только что над нами шумели пальмы и апельсиновые деревья, а сейчас мы стоим в гулкой, прохладной подземной артерии. Над вашей головой — знаменитая «вольта каталана», плоский каталонский кирпичный свод, вокруг — ослепительно белый глазурованный кафель. Вы находитесь внутри секретной транспортной сети Сан-Пау: под этим парком прорыто более одного километра подземных тоннелей, которые связывают все павильоны в единый организм.",
+          "Зачем Доменек-и-Монтанер закопал в землю колоссальную часть бюджета, фактически построив под городом-садом второй, подземный город? Давайте разберёмся, как была устроена медицина на рубеже девятнадцатого и двадцатого веков. После открытий Пастера врачи наконец поняли, что такое внутрибольничная инфекция. Если вы держите тысячу больных под одной крышей в одном гигантском здании, то вспышка тифа, холеры или оспы в одной палате через неделю положит весь госпиталь.",
+          "Поэтому передовые умы Европы перешли на так называемую павильонную систему: каждое отделение — хирургия, инфекционка, терапия — это отдельный домик в парке. Но в Вене, Берлине или Париже эта система тут же столкнулась с суровой реальностью. Представьте: идёт проливной зимний дождь или стоит сорокаградусная каталонская жара. Как везти человека после полостной операции из операционной в палату через улицу? Как катить дымящиеся котлы с супом из кухни, тюки с грязным окровавленным бельём, медикаменты? И главное — как вывозить тела умерших, чтобы выздоравливающие пациенты, которые гуляют по парку и дышат цветами, не смотрели каждые полчаса на похоронную процессию?",
+          "И Доменек-и-Монтанер принимает гениальное инженерное решение. Он делит реальность Сан-Пау на два абсолютно изолированных мира: Верхний и Нижний. Наверху, под синим небом Барселоны, разрешена только жизнь. Только тишина, пение птиц, журчание фонтанов и покой. Ни одной тележки с грязным бельём, ни одного суетящегося санитара, ни одного напоминания о страданиях и смерти.",
+          "А вот вся изнанка больничной машины уходит сюда — под землю. Посмотрите на ширину этого коридора: он рассчитан с точностью до сантиметра так, чтобы здесь свободно разъезжались две больничные каталки. Под потолком и в стенах шли все коммуникации, невероятные для тысяча девятьсот пятого года: силовые кабели от собственной электростанции госпиталя, паровые трубы центрального отопления, водопровод и внутренняя телефонная линия.",
+          "Кухня, прачечная, аптека, котельная и морг на севере участка работали как часы, отправляя лифтами наверх всё необходимое прямо внутрь каждого павильона. Даже выезд для похоронных карет был спрятан на дальней северной границе за отдельным подземным рукавом. Смерть в Сан-Пау в прямом смысле слова уходила под землю, чтобы не пугать живых."
+        ],
+        anecdoteTitle: "Ночной «Гран-при Сан-Пау» на больничных каталках",
+        anecdoteText: "Но где бы вы ни построили идеальную инженерную систему, в ней обязательно появится человеческий фактор. В середине двадцатого века, когда госпиталь работал на полную мощность, у этих длинных, идеально прямых подземных тоннелей обнаружилось одно неожиданное свойство. Дело в том, что весь участок Сан-Пау лежит на склоне холма Кармель — с севера на юг здесь идёт плавный, но очень ощутимый уклон. И вот представьте: три часа ночи. В палатах наверху полная тишина, пациенты спят. А здесь внизу молодые врачи-интерны на ночном дежурстве и санитары устраивали… подпольные гонки! На смазанных каталках, инвалидных колясках и тележках для белья с резиновыми колёсами. От дальних северных павильонов до главного корпуса — почти полкилометра прямой дистанции под уклон по гладкому кафелю! Скорость развивалась такая, что на поворотах закладывало уши. У этого ночного «Гран-при Сан-Пау» был только один естественный ограничитель скорости — монахини «Дардерс». На поясе у каждой сестры висели длинные деревянные чётки-розарии, которые при ходьбе характерно щёлкали. В акустике подземного свода этот стук чёток был слышен за сто метров. И как только из бокового тоннеля раздавалось мерное «клац-клац», гонщики мгновенно били по тормозам и с самым серьёзным лицом начинали проверять колёсики у каталки!",
+        walkInstruction: "Поднимитесь по лестнице из тоннеля на свежий воздух — на центральную аллею парка между павильонами. Там запустите Станцию 3."
+      },
+      {
+        id: "station-3",
+        number: 3,
+        title: "Город-сад: Терапия красотой и ботанический щит",
+        subtitle: "Почему из 48 задуманных павильонов построили только 27, и как эвкалипт, розмарин и лаванда работали вместо антибиотиков.",
+        location: "В центральной части парка на главной оси между женскими (слева) и мужскими (справа) павильонами",
+        duration: "около 11 мин.",
+        tags: ["Красота лечит", "48 по плану / 27 в реальности", "Эвкалипт и лаванда", "Антисептический сад"],
+        lookPrompt: "Оглядитесь вокруг на 360 градусов: посмотрите на разноцветную чешую керамических куполов, каменных ангелов на фасадах и растения вдоль садовых дорожек.",
+        paragraphs: [
+          "Выходите на солнечный свет и сделайте глубокий вдох. Оглядитесь вокруг. Слева и справа от вас в зелени садов стоят павильоны, похожие на драгоценные шкатулки. Их крыши покрыты глазурованной керамической черепицей в форме рыбьей чешуи — изумрудной, кобальтовой, золотисто-жёлтой и бирюзовой. Кстати, даже планировка этого парка отражала строгие нравы начала двадцатого века: если смотреть от главного входа на север, то вся левая, западная половина комплекса предназначалась исключительно для женщин и называлась именами святых покровительниц — Санта-Виктория, Пуриссима, Санта-Мерсе. А вся правая, восточная сторона — это мужской мир: Сан-Рафаэль, Сан-Сальвадор, Сан-Леопольд.",
+          "Сейчас вы стоите посреди главного замысла Доменек-и-Монтанера — его «Сьютат Жарди», терапевтического Города-сада. Но вдумайтесь в масштаб его амбиций: всё это великолепие, которое вы видите вокруг — это лишь половина того, что он начертил на бумаге! По генеральному плану Доменек-и-Монтанера здесь должно было стоять сорок восемь отдельных павильонов. По его расчётам, на каждого больного здесь приходилось сто сорок пять квадратных метров общей площади — абсолютный мировой рекорд для больниц того времени. В итоге до тысяча девятьсот тридцатого года успели возвести двадцать семь зданий: шестнадцать в чистом стиле модернизма по чертежам самого мастера и ещё одиннадцать — в более сдержанном стиле двадцатых годов.",
+          "В чём заключалась главная медицинская идея этого места? Её можно сформулировать в двух словах: «Красота лечит». Доменек-и-Монтанер считал, что больница не должна быть мрачным конвейером по ремонту плоти. Вспомните, кто лежал в этих корпусах. Богатые буржуа с проспекта Пасео-де-Грасиа в городские больницы не ложились — к ним домой приезжал личный врач. Сюда попадали портовые грузчики, ткачихи с текстильных фабрик, прачки, батраки — люди, которые всю жизнь прожили в тёмных, сырых каморках без окон.",
+          "И Доменек-и-Монтанер создаёт для этих бедняков среду, которая по уровню красоты превосходит особняки миллионеров! Повсюду улыбающиеся каменные ангелы, мозаичные розы, тёплый терракотовый кирпич. Когда выздоравливающего вывозили на солнечную южную террасу павильона, его взгляд нигде не упирался в глухую больничную стену. Сегодня, спустя сто с лишним лет, нейробиологи и врачи называют это «исцеляющей архитектурой» и доказывают с анализами крови в руках, что эстетическая среда снижает уровень кортизола и ускоряет заживление тканей. А Доменек-и-Монтанер знал это интуитивно в тысяча девятьсот втором году.",
+          "Но и это ещё не всё. Посмотрите на деревья и кустарники вокруг вас. Вы думаете, это просто красивый средиземноморский ландшафтный дизайн? Ничего подобного. Этот парк спроектирован как гигантская живая аптека под открытым небом. Присмотритесь, что здесь растёт: вдоль дорожек высажены лаванда, розмарин, тимьян и шалфей, выше — липы и горькие померанцы, а над ними возвышаются сосны и мощные эвкалипты.",
+          "Почему именно такой набор? В начале двадцатого века человечество ещё не знало пенициллина и антибиотиков. Главным убийцей в больших городах были туберкулёз, пневмония и бронхит. Когда каталонское солнце нагревает листья эвкалипта, хвою сосны, кусты розмарина и лаванды, в воздух выделяется колоссальная концентрация фитонцидов и эфирных масел — цинеола, камфоры и линалоола. Этот зелёный щит работал сразу в двух направлениях: во-первых, он убивал больничные запахи карболки и эфира, дезинфицируя воздух между корпусами; а во-вторых, превращал весь парк в гигантский природный ингаляторий для лёгочных больных."
+        ],
+        anecdoteTitle: "Операция «Горький апельсин»: как монахини вычисляли ночных воришек",
+        anecdoteText: "С этим аптечным садом связана одна очень смешная бытовая история. Зимой и весной ветви апельсиновых деревьев в парке Сан-Пау буквально ломятся от крупных, ярко-оранжевых, невероятно аппетитных плодов. А теперь представьте себе рабочего с фабрики в тысяча девятьсот восемнадцатом году, который пошёл на поправку. Кормили в больнице по строгой диете — бульоном и кашей. Пациент выходит на прогулку в парк, видит над головой сочный оранжевый апельсин, дожидается, пока дежурная монахиня отвернётся, срывает плод, прячется за куст лаванды и жадно впивается в него зубами… И в ту же секунду его лицо перекашивает так, будто он откусил кусок мыла с лимонной кислотой! Потому что хитрые проектировщики высадили в парке исключительно севильский померанец — дикий, несъедобный, чудовищно кислый и полынно-горький апельсин, который использовали только для эфирного масла! Вечером на обходе старшей сестре даже не нужно было проводить расследование, кто обрывал деревья в саду: достаточно было посмотреть, кто из пациентов сидит на койке со сведёнными скулами и умоляет дать ему кружку воды с сахаром!",
+        walkInstruction: "Пройдите к павильону Сан-Рафаэль (справа от главной аллеи). Зайдите внутрь исторического больничного зала и включите Станцию 4."
+      },
+      {
+        id: "station-4",
+        number: 4,
+        title: "Павильон Сан-Рафаэль: Палата без углов и последние дни Антонио Гауди",
+        subtitle: "Высокие технологии гигиены 1920-х годов и трагедия 7 июня 1926 года, которую Барселона не может простить себе до сих пор.",
+        location: "Внутри павильона Сан-Рафаэль, в отреставрированной исторической палате возле белых металлических коек",
+        duration: "около 11 мин.",
+        tags: ["Палата 1920-х годов", "Скруглённые углы", "Природный климат-контроль", "Смерть Гауди (1926)"],
+        lookPrompt: "Подойдите к одной из белых больничных коек. Поднимите голову к пастельно-зелёным сводам потолка, а затем посмотрите на стыки стен и пола — попробуйте найти хотя бы один острый угол.",
+        paragraphs: [
+          "Мы внутри павильона Сан-Рафаэль. Его построили между тысяча девятьсот четырнадцатым и тысяча девятьсот восемнадцатым годами на деньги мецената Рафаэля Рабеля-и-Патшота. Сегодня этот корпус полностью возвращён в свой первозданный вид двадцатых годов прошлого века. Подойдите к одной из этих чугунных белых кроватей и поднимите взгляд к потолку.",
+          "Перед вами — вершина медицинских технологий столетней давности, зашифрованная в керамике и кирпиче. Давайте прочитаем этот зал глазами главного врача тысяча девятьсот двадцатого года. Первое — цвет. Посмотрите на глазурованную плитку сводов: мягкий пастельно-зелёный, аквамариновый и сливочно-белый оттенки. Почему не больничный белый? Потому что лежачий больной сутками смотрит в потолок! Ослепительно белый цвет раздражает сетчатку у человека с высокой температурой, а тёмное дерево вызывает депрессию. Прохладный же цвет морской волны и молодой листвы визуально снижает жар и успокаивает нервную систему.",
+          "Второе — посмотрите на углы, где стены сходятся друг с другом или опускаются к полу. Вы видите хотя бы один прямой угол в девяносто градусов? Их здесь нет! Все стыки в этом зале плавно закруглены специальной вогнутой керамической плиткой. Зачем? Потому что в прямом углу всегда скапливается микроскопическая пыль, частички кожи и бактерии, которые невозможно до конца вычистить ни одной щёткой. А зал со скруглёнными керамическими углами санитары могли буквально окатить из шланга водой с дезинфицирующим раствором — грязи просто не за что было зацепиться.",
+          "И третье — посмотрите на ажурные керамические розетки в самой высокой точке каждого купольного свода и на вентиляционные каналы за батареями под восемнадцатью огромными окнами. Это бесшумный, безмоторный климат-контроль Доменек-и-Монтанера! Свежий воздух из эвкалиптового парка заходил снаружи, зимой согревался о горячие радиаторы, поднимался вверх и вытягивал отработанное дыхание тридцати пациентов через потолочные розетки в башенки-дефлекторы на крыше. Воздух в палате полностью обновлялся без единого сквозняка.",
+          "А теперь — давайте сменим интонацию. Потому что именно с такой больничной койкой для бедняков связана самая пронзительная и трагическая страница в истории архитектуры Барселоны. Перенесёмся в седьмое июня тысяча девятьсот двадцать шестого года. Тёплый вечер, около шести часов. По улице Гран-Виа идёт семидесятитрёхлетний старик. Он направляется со стройплощадки храма Саграда Фамилия в церковь Сан-Фелип-Нери к вечерней исповеди.",
+          "Выглядит этот старик как самый последний городской нищий. Худой, с седой нечёсаной бородой, в заношенном до дыр тёмном костюме, который в нескольких местах скреплён английскими булавками вместо пуговиц, в стоптанных башмаках. В карманах у него нет ни документов, ни кошелька, ни визиток — только маленькое Евангелие и горсть лесных орехов. На перекрёстке Гран-Виа и улицы Байлен старик задумывается, делает шаг на проезжую часть — и попадает прямо под удар полного хода трамвая маршрута номер тридцать.",
+          "Старика отбрасывает на брусчатку. У него сломаны рёбра, тяжёлая черепно-мозговая травма, внутреннее кровотечение, он без сознания. И вот тут происходит сцена, от которой жителям Барселоны стыдно до сих пор: один за другим останавливаются три водителя такси — и все трое отказываются везти истекающего кровью старика в больницу! Они брезгливо смотрят на его рваный пиджак на булавках и понимают, что этот бродяга испачкает им кожаное сиденье и никогда не заплатит за проезд.",
+          "Только когда вмешался офицер Гражданской гвардии и силой приказал четвёртому таксисту открыть дверь, раненого довезли до старых палат госпиталя Святого Креста, который в те годы как раз постепенно переезжал сюда, в корпуса Сан-Пау. Неизвестного старика оформили как бездомного и положили на обычную казённую кровать в общей палате для неимущих — точно такую, какая стоит сейчас перед вами. И только на следующее утро, когда капеллан Саграда Фамилия Мосен Хиль Парес и архитектор Доменек Суграньес в панике объехали все морги и больницы города, они вошли в общую палату для нищих, увидели лицо старика на подушке и закричали: «Боже правый, это же Антонио Гауди!»"
+        ],
+        anecdoteTitle: "«Моё место — здесь, среди бедняков»",
+        anecdoteText: "Когда утром восьмого июня тысяча девятьсот двадцать шестого года по Барселоне разнеслась весть о том, что великий Антонио Гауди — создатель Саграда Фамилия, Дома Мила и Парка Гуэль — лежит как бездомный бродяга в общей палате для бедняков, городские власти охватил ужас. К его койке немедленно примчались главврачи, чиновники мэрии и богатые меценаты. Они требовали сию же секунду перевезти гения в лучшую частную клинику или хотя бы в отдельную министерскую палату класса люкс. Но Гауди, который к тому моменту пришёл в сознание и, несмотря на страшную боль, сохранял абсолютную ясность ума, открыл глаза, посмотрел на лежащих рядом на таких же железных койках рабочих и каменщиков и тихо, но твёрдо остановил врачей. Он произнёс фразу на каталонском, которая навсегда вошла в учебники истории: «El meu lloc és aquí, entre els pobres» — «Моё место здесь, среди бедных». Он категорически запретил переводить себя в отдельную палату. Десятого июня тысяча девятьсот двадцать шестого года Антонио Гауди скончался. А того таксиста, который отказался везти умирающего архитектора, полиция разыскала в тот же день и оштрафовала. Через два дня за гробом человека, которого приняли за нищего, шла вся Барселона.",
+        walkInstruction: "Выйдите из павильона Сан-Рафаэль и пройдите чуть дальше к павильону Сан-Сальвадор и стоящему рядом по центру операционному корпусу (Casa d’Operacions). Там включите Станцию 5."
+      },
+      {
+        id: "station-5",
+        number: 5,
+        title: "Павильон Сан-Сальвадор: Финансовый крах, сын архитектора и хирурги в витрине",
+        subtitle: "Как в 1913 году стройка века обанкротилась, как меценатам продавали бессмертие и зачем операционные делали из стекла.",
+        location: "У павильона Сан-Сальвадор и перед стеклянными эркерами операционного корпуса (Casa d’Operacions)",
+        duration: "около 10 мин.",
+        tags: ["Долгострой 1902–1930", "Банкротство 1913 года", "Сын Пере Доменек-и-Роура", "Стеклянные операционные"],
+        lookPrompt: "Посмотрите на павильон Сан-Сальвадор, а затем переведите взгляд на центральное здание рядом — обратите внимание на огромные стеклянные фонари и наклонные окна операционных залов.",
+        paragraphs: [
+          "Мы стоим у павильона Сан-Сальвадор и соседнего с ним Операционного дома — Каса д’Операсьонс. Павильон Сан-Сальвадор — это исторический первенец: именно сюда в тысяча девятьсот шестнадцатом году въехали самые первые пациенты нового госпиталя. Но давайте посмотрим на цифры, потому что за ними скрывается настоящая финансовая драма. Первый камень заложили в тысяча девятьсот втором году. Первых больных приняли только через четырнадцать лет — в шестнадцатом. А официально король Испании Альфонсо Тринадцатый открыл комплекс только в тысяча девятьсот тридцатом! Двадцать восемь лет стройки! Что пошло не так?",
+          "А произошло ровно то, чего так боялись парижские банкиры. Три миллиона золотых песет Пау Жиля казались бесконечными только на бумаге. Но Доменек-и-Монтанер строил не типовые больничные бараки. Он нанял лучших кузнецов художественной ковки, лучших керамистов Валенсии, лучших витражистов и скульпторов. Каждый павильон возводился вручную как ювелирное изделие. Добавьте сюда сложнейшие глинистые грунты, подземные тоннели и рабочие восстания вроде «Трагической недели» тысяча девятьсот девятого года. И в тысяча девятьсот тринадцатом году наступает развязка: деньги французского наследства заканчиваются. Совсем. На счетах ноль, а стройка готова едва наполовину.",
+          "Парижский комитет банкиров в панике умывает руки и передаёт недостроенный комплекс старой барселонской администрации госпиталя — так называемой «Достославной Администрации». Денег нет. Стройка заморожена. И тогда правление госпиталя придумывает гениальный маркетинговый ход, построенный на чистом человеческом тщеславии.",
+          "Они обращаются к самым богатым промышленникам, текстильным магнатам и аристократам Барселоны с простым предложением: «Вы оплачиваете строительство одного конкретного павильона под ключ — а мы называем этот павильон именем вашего небесного покровителя и высекаем ваше имя золотом и камнем на фасаде на вечные времена!» И это сработало! Каталонские миллионеры выстроились в очередь за архитектурным бессмертием.",
+          "Но двадцать седьмого декабря тысяча девятьсот двадцать третьего года случается новый удар: в возрасте семидесяти трёх лет от рака желудка умирает сам Льюис Доменек-и-Монтанер, так и не увидев свой главный труд завершённым. Кто достроит этот колоссальный пазл? Эстафету подхватывает его родной сын и правая рука — архитектор Пере Доменек-и-Роура. Если вы пройдёте в северную, верхнюю часть парка, вы сразу увидите разницу между отцом и сыном: у Пере уже не было прежних бюджетов, да и эпоха в двадцатые годы сменилась на более строгий классицизм. Он достраивал павильоны скромнее и экономнее, но с огромным уважением к замыслу отца, доведя дело до королевского открытия шестнадцатого января тысяча девятьсот тридцатого года.",
+          "А теперь посмотрите на здание прямо по центру аллеи — Операционный корпус. Видите эти огромные, выступающие полукругом стеклянные окна и стеклянные скаты крыши, из-за которых здание напоминает ботаническую оранжерею или студию художника? Это операционные залы дневного света! Зачем хирургов начала двадцатого века помещали в стеклянный аквариум?",
+          "Причина была сугубо прагматичной и даже взрывоопасной. Электрические лампочки в тысяча девятьсот десятом году были тусклыми, давали резкие чёрные тени внутри глубокой раны и постоянно гасли при перепадах напряжения. Но главное — тогдашний наркоз делали с помощью паров эфира и хлороформа. Воздух в операционной был буквально пропитан гремучей взрывоопасной смесью: любая случайная искра в электрическом патроне могла взорвать всю операционную вместе с хирургом и пациентом! Поэтому самым безопасным, ярким и бестеневым светом для скальпеля был рассеянный северный дневной свет сквозь стеклянный купол."
+        ],
+        anecdoteTitle: "Хирурги в витрине: бесплатный театр для скучающих пациентов",
+        anecdoteText: "С этими стеклянными операционными вышел совершенно комический просчёт, о котором архитекторы сначала даже не подумали. Представьте себе: за огромными прозрачными окнами кипит сложнейшая операция. Из-за паровых стерилизаторов и парникового эффекта под стеклом жара внутри стоит под тридцать пять градусов, с главных хирургов градом течёт пот. А прямо снаружи, в нескольких метрах от окон, по парковым дорожкам и террасам соседних павильонов неспешно прогуливаются выздоравливающие пациенты в полосатых пижамах. Развлечений в больнице в тысяча девятьсот двадцатом году немного — ни телевизоров, ни радио. И тут такое зрелище прямо за стеклом! Пациенты начали собираться под окнами операционной целыми толпами, как в партере театра или на футбольном матче. Более того — бывалые больные, которым уже вырезали аппендицит или грыжу на прошлой неделе, со знанием дела комментировали соседям каждое движение скальпеля: «Смотри-смотри, сейчас профессор зажим возьмёт! Эх, кто ж так шьёт, вот меня в вторник зашивали куда аккуратнее!» Хирурги чувствовали себя золотыми рыбками в магазинной витрине и пришли в ярость. В итоге администрации пришлось срочно заматировать нижний ярус стёкол и повесить плотные белые шторы, чтобы оставить врачам верхний свет, но закрыть этот уличный кинотеатр!",
+        walkInstruction: "Возвращайтесь по главной садовой аллее обратно к главному Административному корпусу. Поднимитесь по парадной мраморной лестнице на второй этаж в большой Купольный зал и включите Станцию 6."
+      },
+      {
+        id: "station-6",
+        number: 6,
+        title: "Купольный зал Администрации и Взгляд вдоль Авенида Гауди",
+        subtitle: "Переезд клиники в 2009 году, реставрация под эгидой ЮНЕСКО и финальная встреча двух титанов Барселоны.",
+        location: "На втором этаже Административного корпуса — в парадном Купольном зале и у центрального окна над главным порталом",
+        duration: "около 9 мин.",
+        tags: ["Переезд 2009 года", "Всемирное наследие ЮНЕСКО", "Капсула времени", "Финал на оси Гауди"],
+        lookPrompt: "Поднимите взгляд к ребристому куполу парадного зала, а в финале подойдите вплотную к большому центральному окну и посмотрите вниз вдоль проспекта Авенида Гауди прямо на Саграда Фамилия.",
+        paragraphs: [
+          "Вы поднялись по парадной лестнице из тёплого камня и мрамора, прошли сквозь розовый колонный зал вестибюля и оказались в самой торжественной точке всего комплекса — в Купольном зале Административного корпуса. Посмотрите наверх: тончайшие каменные нервюры, керамические своды, витражный свет, капители с цветочным орнаментом. Кажется, что это тронный зал королевского дворца.",
+          "И тем не менее, почти целый век — с тысяча девятьсот шестнадцатого по две тысячи девятый год — эти стены не были музеем. Здесь не прекращалась настоящая, тяжёлая больничная работа. Во время Гражданской войны в Испании в тысяча девятьсот тридцать шестом — тридцать девятом годах, когда Барселону нещадно бомбила авиация Франко и Муссолини, сюда свозили тысячи раненых. В тысяча девятьсот восемьдесят четвёртом году именно в стенах Сан-Пау хирурги провели первую в истории Испании успешную пересадку сердца!",
+          "Но к концу двадцатого века история совершила полный оборот. Точно так же, как средневековый готический госпиталь устарел к тысяча девятьсот первому году, модернистский город-сад Доменек-и-Монтанера перестал помещаться в рамки медицины двадцать первого века. Многотонные аппараты МРТ не проходили в узкие резные двери; в керамические своды памятника архитектуры невозможно было встроить стерильные ламинарные потоки реанимаций. В шестидесятые и семидесятые годы дошло до того, что роскошные мозаичные потолки в палатах начали просто зашивать унылым белым гипсокартоном, чтобы тянуть провода и вешать лампы дневного света.",
+          "Перелом наступил в тысяча девятьсот девяносто седьмом году, когда ЮНЕСКО включила госпиталь Сан-Пау вместе с Дворцом каталонской музыки в список Всемирного наследия человечества. Было принято единственно верное решение: построить для действующей больницы ультрасовременный корпус на самом севере этого же участка, а исторические павильоны отдать реставраторам. В июне две тысячи девятого года последние врачи и пациенты переехали в новое здание, и здесь началась грандиозная пятилетняя реставрация, вернувшая миру шедевр Доменек-и-Монтанера.",
+          "А теперь — подойдите, пожалуйста, вплотную к большому центральному окну этого зала и посмотрите вниз, на город.",
+          "Перед вами открывается, возможно, самый символичный вид во всей Барселоне. Прямо под вами — площадь, с которой час назад началось наше путешествие. А дальше, разрезая шахматную сетку кварталов Эшампле под тем самым бунтарским углом в сорок пять градусов, прямо к синему горизонту Средиземного моря уходит проспект Авенида Гауди — и упирается точно в гигантские башни собора Саграда Фамилия.",
+          "Вдумайтесь в иронию судьбы: проспект, который ведёт к главному творению Льюиса Доменек-и-Монтанера, назван именем его главного соперника — Антонио Гауди. Два великих каталонца, два ровесника, два абсолютно непохожих друг на друга гения. Там, внизу — Гауди, мистик и отшельник, который всю жизнь строил храм для Бога, а умер как нищий старик на казённой койке этой самой больницы. А здесь, наверху — Доменек-и-Монтанер, учёный, гуманист и просветитель, который построил храм для страдающего человека, превратив красоту в лекарство.",
+          "В этом окне они смотрят друг на друга сквозь столетие. Сохраните этот кадр в памяти. С вами был исторический аудиогид по комплексу Сан-Пау. Гуляйте по Барселоне с открытыми глазами — здесь за каждым камнем прячется большая история!"
+        ],
+        anecdoteTitle: "Клад за фальшпотолком эпохи Франко",
+        anecdoteText: "И напоследок — удивительная история, которая произошла здесь в две тысячи девятом году, когда реставраторы впервые вошли в опустевшие больничные корпуса. Больше всего искусствоведы боялись одного: снимать те самые уродливые подвесные потолки из гипсокартона и пластика, которыми в шестидесятые и семидесятые годы, при режиме Франко, зашили старинные своды. Все были уверены, что рабочие сорок лет назад просто сбили перфораторами керамические цветы и мозаику Доменек-и-Монтанера, чтобы прикрутить металлические профили для неоновых ламп. Когда в первой палате вскрыли первую панель подвесного потолка и посветили туда фонарями, реставраторы онемели. Оказалось, что простые барселонские монтажники шестидесятых годов испытывали такое благоговение перед красотой старых сводов, что сверлили крепления с ювелирной осторожностью — исключительно в межплиточные швы, не повредив ни единого керамического лепестка! Более того: уродливый гипсокартон сорок лет работал как герметичная капсула времени! Он защитил оригинальную глазурь и позолоту от копоти, выхлопных газов и ультрафиолета. Когда вековую пыль смахнули кисточками, краски тысяча девятьсот десятого года засияли так ярко, словно их обожгли в печи вчера утром. Иногда даже строительное варварство семидесятых годов способно спасти шедевр ЮНЕСКО!",
+        walkInstruction: "Экскурсия завершена! Выходя из ворот Сан-Пау, прогуляйтесь пешком по бульвару Авенида Гауди прямо к храму Саграда Фамилия."
+      }
+    ];
+
+    function renderStations() {
+      const container = document.getElementById("stationsContainer");
+      container.innerHTML = stationsData.map((st, sIdx) => {
+        const anecdoteIdx = st.paragraphs.length;
+
+        return `
+          <article id="${st.id}" class="bg-stone-900/90 rounded-3xl shadow-2xl border border-stone-800 overflow-hidden transition-all">
+            <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-[#19302c] text-white p-6 sm:p-10 border-b border-stone-800 relative">
+              <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div class="inline-flex items-center gap-2.5">
+                  <span class="w-9 h-9 rounded-xl bg-terracotta-600 text-white font-serif font-bold text-lg flex items-center justify-center shadow">
+                    ${st.number}
+                  </span>
+                  <span class="text-xs font-bold uppercase tracking-widest text-mosaic-400">
+                    Эпизод ${st.number} из 6 • ${st.duration}
+                  </span>
+                </div>
+
+                <button onclick="playStation(${sIdx}, 0)" id="station-btn-${sIdx}"
+                  class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-terracotta-600 hover:bg-terracotta-500 text-white text-xs sm:text-sm font-semibold shadow-lg transition cursor-pointer">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <span>Слушать Станцию ${st.number}</span>
+                </button>
+              </div>
+
+              <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white leading-tight">
+                ${st.title}
+              </h2>
+              <p class="text-stone-300 text-sm sm:text-base mt-2 max-w-3xl">
+                ${st.subtitle}
+              </p>
+
+              <div class="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-stone-300">
+                <div class="flex items-center gap-2">
+                  <span class="text-mosaic-400 font-bold">📍 Точка обзора:</span>
+                  <span>${st.location}</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                  ${st.tags.map(t => `<span class="px-2.5 py-1 rounded-md bg-white/10 text-stone-200 font-medium">${t}</span>`).join("")}
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-[#182825] border-b border-ceramic-800/60 px-6 sm:px-10 py-4 flex items-start gap-3">
+              <span class="text-xl mt-0.5">👁️</span>
+              <div class="text-xs sm:text-sm text-ceramic-100">
+                <strong class="font-semibold uppercase tracking-wider text-[11px] text-mosaic-400 block mb-0.5">Куда смотреть прямо сейчас</strong>
+                ${st.lookPrompt}
+              </div>
+            </div>
+
+            <div class="p-6 sm:p-10 space-y-5">
+              <div class="text-xs text-stone-400 italic mb-2">
+                💡 Нажмите на любой абзац, чтобы запустить озвучку именно с этого фрагмента.
+              </div>
+
+              ${st.paragraphs.map((pText, pIdx) => `
+                <div id="para-${sIdx}-${pIdx}"
+                  onclick="playStation(${sIdx}, ${pIdx})"
+                  class="paragraph-block p-3.5 sm:p-4 rounded-xl cursor-pointer text-stone-200 font-serif text-xl sm:text-[22px] leading-[1.75]">
+                  ${pText}
+                </div>
+              `).join("")}
+
+              <div id="para-${sIdx}-${anecdoteIdx}"
+                onclick="playStation(${sIdx}, ${anecdoteIdx})"
+                class="paragraph-block mt-8 bg-gradient-to-br from-[#2a2115] via-[#211c17] to-[#291814] rounded-2xl p-6 sm:p-8 border border-mosaic-500/40 shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-mosaic-500/20 text-mosaic-400 text-xs font-bold uppercase tracking-wider">
+                    <span>🎬 Исторический сюжет / Анекдот к Станции ${st.number}</span>
+                  </div>
+                  <span class="text-xs text-mosaic-400 font-sans font-semibold flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Слушать историю
+                  </span>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-white mb-3">
+                  ${st.anecdoteTitle}
+                </h3>
+                <p class="font-serif text-lg sm:text-xl text-stone-200 leading-relaxed italic">
+                  «${st.anecdoteText}»
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-stone-950/80 border-t border-stone-800 px-6 sm:px-10 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3 text-xs sm:text-sm text-stone-300">
+                <span class="w-8 h-8 rounded-full bg-stone-800 flex items-center justify-center text-base shrink-0">🚶</span>
+                <div>
+                  <strong class="font-bold text-white block">Переход к следующей точке:</strong>
+                  <span>${st.walkInstruction}</span>
+                </div>
+              </div>
+              ${sIdx < stationsData.length - 1 ? `
+                <button onclick="playStation(${sIdx + 1}, 0)" class="shrink-0 px-4 py-2 rounded-xl bg-terracotta-600 hover:bg-terracotta-500 text-white text-xs font-semibold transition cursor-pointer">
+                  Перейти к Станции ${sIdx + 2} →
+                </button>
+              ` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // ============================================================================
+    // NEURAL STUDIO BARITONE ENGINE (Реальный мужской нейро-баритон под тембр С. Минаева)
+    // Использует предварительно сгенерированные нейросетевые MP3 (ru-RU-DmitryNeural, -15Hz)
+    // из папки audio_ru/ + аналоговый сдвиг формант (preservesPitch = false) для грудного тембра.
+    // ============================================================================
+    const synth = window.speechSynthesis;
+    const neuralAudio = new Audio();
+    neuralAudio.preload = "auto";
+
+    let availableVoices = [];
+    let selectedVoice = null;
+
+    // Режим движка: "neural_mp3" (реальный мужской баритон MP3) или "webspeech" (резервный)
+    let engineMode = "neural_mp3";
+
+    let voiceConfig = {
+      lang: "ru-RU",
+      pitch: 0.96,      // В режиме формантного сдвига (preservesPitch=false) 0.96 даёт бархатный грудной тембр
+      rate: 0.96,
+      formantShift: true, // Сдвиг формант для глубокого студийного тембра Минаева
+      autoScroll: true
+    };
+
+    let currentStationIdx = 0;
+    let currentParaIdx = 0;
+    let isPlaying = false;
+    let isPaused = false;
+    let sentenceQueue = [];
+    let currentSentenceIdx = 0;
+    let pauseTimer = null;
+
+    // Строгий чёрный список женских голосов Windows/Chrome (чтобы никогда не звучала Ирина!)
+    const femaleBlacklist = [
+      "irina", "ирина", "svetlana", "светлана", "dariya", "дарья",
+      "elena", "елена", "anna", "анна", "maria", "мария", "milena",
+      "katya", "катя", "tatyana", "татьяна", "female", "женский"
+    ];
+
+    const preferredRussianMaleKeywords = [
+      "dmitry", "дмитрий", "pavel", "павел", "maxim", "максим",
+      "yuri", "юрий", "male", "мужской"
+    ];
+
+    // Низкий кинематографический гонг в начале эпизода (в духе заставок «Уроков истории»)
+    function playChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(110.0, now);
+        osc2.type = "triangle";
+        osc2.frequency.setValueAtTime(164.81, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.16, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 2.25);
+        osc2.stop(now + 2.25);
+      } catch (e) {}
+    }
+
+    function loadVoices() {
+      const selectEl = document.getElementById("voiceSelect");
+      const hintEl = document.getElementById("voicePriorityHint");
+
+      // Только мужские системные голоса для резерва
+      let maleSystemVoices = [];
+      if (synth) {
+        const allVoices = synth.getVoices() || [];
+        maleSystemVoices = allVoices.filter(v => {
+          const isRu = v.lang.toLowerCase().startsWith("ru");
+          const lowerName = v.name.toLowerCase();
+          const isFemale = femaleBlacklist.some(f => lowerName.includes(f));
+          return isRu && !isFemale;
+        });
+
+        maleSystemVoices.sort((a, b) => {
+          const nameA = a.name.toLowerCase();
+          const nameB = b.name.toLowerCase();
+          const scoreA = preferredRussianMaleKeywords.findIndex(k => nameA.includes(k));
+          const scoreB = preferredRussianMaleKeywords.findIndex(k => nameB.includes(k));
+          return (scoreA === -1 ? 999 : scoreA) - (scoreB === -1 ? 999 : scoreB);
+        });
+      }
+
+      availableVoices = maleSystemVoices;
+      selectedVoice = availableVoices[0] || null;
+
+      // Формируем список: на 1-м месте всегда Студийный Нейро-Баритон (MP3 из audio_ru/)
+      let optionsHtml = `
+        <option value="neural_minaev">★ Студийный Нейро-Баритон: Тембр С. Минаева (Neural MP3 • Грудной резонанс)</option>
+        <option value="neural_deep">★ Глубокий Вечерний Баритон (Neural MP3 • Пониженная форманта)</option>
+        <option value="neural_crisp">★ Документальный Репортаж (Neural MP3 • Чёткий темп)</option>
+      `;
+
+      availableVoices.forEach((v, idx) => {
+        optionsHtml += `<option value="sys_${idx}">Системный мужской: ${v.name} (${v.lang})</option>`;
+      });
+
+      selectEl.innerHTML = optionsHtml;
+      hintEl.textContent = "✓ Активен реальный мужской нейро-баритон (audio_ru/ • тембр и интонации С. Минаева)";
+
+      selectEl.onchange = (e) => {
+        const val = e.target.value;
+        if (val === "neural_minaev") {
+          engineMode = "neural_mp3";
+          voiceConfig.formantShift = true;
+          applyVoicePreset(0.96, 0.96);
+          hintEl.textContent = "✓ Активен Студийный Нейро-Баритон (тембр С. Минаева)";
+        } else if (val === "neural_deep") {
+          engineMode = "neural_mp3";
+          voiceConfig.formantShift = true;
+          applyVoicePreset(0.91, 0.92);
+          hintEl.textContent = "✓ Активен Глубокий Вечерний Баритон (пониженная форманта)";
+        } else if (val === "neural_crisp") {
+          engineMode = "neural_mp3";
+          voiceConfig.formantShift = false;
+          applyVoicePreset(1.00, 1.02);
+          hintEl.textContent = "✓ Активен Документальный Репортаж (оригинальная частота)";
+        } else if (val.startsWith("sys_")) {
+          const idx = parseInt(val.replace("sys_", ""), 10);
+          engineMode = "webspeech";
+          selectedVoice = availableVoices[idx] || null;
+          hintEl.textContent = `Системный мужской голос: ${selectedVoice ? selectedVoice.name : "ru-RU"}`;
+          if (isPlaying) playStation(currentStationIdx, currentParaIdx, false);
+        }
+      };
+    }
+
+    if (synth) {
+      loadVoices();
+      if (typeof synth.onvoiceschanged !== "undefined") {
+        synth.onvoiceschanged = loadVoices;
+      }
+    }
+
+    function applyAudioElementParams() {
+      // Управление высотой тембра (формантой) и скоростью на реальном MP3-аудио
+      if (voiceConfig.formantShift) {
+        neuralAudio.preservesPitch = false;
+        neuralAudio.mozPreservesPitch = false;
+        neuralAudio.webkitPreservesPitch = false;
+        // Комбинируем желаемую высоту баритона и темп
+        neuralAudio.playbackRate = Math.max(0.78, Math.min(1.18, voiceConfig.pitch));
+      } else {
+        neuralAudio.preservesPitch = true;
+        neuralAudio.mozPreservesPitch = true;
+        neuralAudio.webkitPreservesPitch = true;
+        neuralAudio.playbackRate = Math.max(0.78, Math.min(1.25, voiceConfig.rate));
+      }
+    }
+
+    function updateVoiceParams() {
+      const pitchVal = parseFloat(document.getElementById("pitchSlider").value);
+      const rateVal = parseFloat(document.getElementById("rateSlider").value);
+
+      voiceConfig.pitch = pitchVal;
+      voiceConfig.rate = rateVal;
+
+      document.getElementById("pitchValueDisplay").textContent = pitchVal.toFixed(2);
+      document.getElementById("rateValueDisplay").textContent = rateVal.toFixed(2) + "x";
+
+      if (engineMode === "neural_mp3") {
+        applyAudioElementParams();
+      } else if (isPlaying && !isPaused) {
+        playStation(currentStationIdx, currentParaIdx, false);
+      }
+    }
+
+    function applyVoicePreset(pitch, rate) {
+      document.getElementById("pitchSlider").value = pitch;
+      document.getElementById("rateSlider").value = rate;
+      updateVoiceParams();
+    }
+
+    function syncAutoScroll(checked) {
+      voiceConfig.autoScroll = checked;
+      const mob = document.getElementById("autoScrollToggleMobile");
+      const desk = document.getElementById("autoScrollToggleDesktop");
+      if (mob) mob.checked = checked;
+      if (desk) desk.checked = checked;
+    }
+
+    function splitIntoSentences(text) {
+      const raw = text.match(/[^.!?…]+[.!?…]+(\s|$)|[^.!?…]+$/g);
+      return raw ? raw.map(s => s.trim()).filter(Boolean) : [text];
+    }
+
+    function getParagraphText(sIdx, pIdx) {
+      const st = stationsData[sIdx];
+      if (!st) return "";
+      if (pIdx < st.paragraphs.length) {
+        return st.paragraphs[pIdx];
+      }
+      return `${st.anecdoteTitle}. ${st.anecdoteText}`;
+    }
+
+    function getTotalParagraphs(sIdx) {
+      const st = stationsData[sIdx];
+      return st ? st.paragraphs.length + 1 : 0;
+    }
+
+    function highlightActiveParagraph(sIdx, pIdx) {
+      document.querySelectorAll(".paragraph-block").forEach(el => {
+        el.classList.remove("speaking-active");
+      });
+
+      const activeEl = document.getElementById(`para-${sIdx}-${pIdx}`);
+      if (activeEl) {
+        activeEl.classList.add("speaking-active");
+        if (voiceConfig.autoScroll) {
+          activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      const st = stationsData[sIdx];
+      const totalP = getTotalParagraphs(sIdx);
+      document.getElementById("playerStationLabel").textContent =
+        `Станция ${st.number} из 6 • ${pIdx === st.paragraphs.length ? "Исторический анекдот" : `Абзац ${pIdx + 1}/${totalP}`}`;
+      document.getElementById("playerTitleLabel").textContent = st.title;
+      document.getElementById("paragraphCounter").textContent = `Абзац ${pIdx + 1} / ${totalP}`;
+
+      const percent = ((pIdx + 1) / totalP) * 100;
+      document.getElementById("progressBar").style.width = `${percent}%`;
+    }
+
+    function updatePlayerIcons() {
+      const playIcon = document.getElementById("playIcon");
+      const pauseIcon = document.getElementById("pauseIcon");
+      const eq = document.getElementById("eqContainer");
+
+      if (isPlaying && !isPaused) {
+        playIcon.classList.add("hidden");
+        pauseIcon.classList.remove("hidden");
+        eq.classList.add("is-playing");
+      } else {
+        playIcon.classList.remove("hidden");
+        pauseIcon.classList.add("hidden");
+        eq.classList.remove("is-playing");
+      }
+    }
+
+    function clearTimersAndSpeech() {
+      if (pauseTimer) {
+        clearTimeout(pauseTimer);
+        pauseTimer = null;
+      }
+      try {
+        neuralAudio.pause();
+        neuralAudio.currentTime = 0;
+      } catch (e) {}
+      if (synth) {
+        synth.cancel();
+      }
+    }
+
+    function playStation(sIdx, pIdx = 0, withChime = true) {
+      clearTimersAndSpeech();
+
+      currentStationIdx = sIdx;
+      currentParaIdx = pIdx;
+      isPlaying = true;
+      isPaused = false;
+
+      if (withChime && pIdx === 0) {
+        playChime();
+      }
+
+      highlightActiveParagraph(currentStationIdx, currentParaIdx);
+      updatePlayerIcons();
+
+      const startDelay = (withChime && pIdx === 0) ? 700 : 80;
+
+      if (engineMode === "neural_mp3") {
+        pauseTimer = setTimeout(() => {
+          playNeuralMp3Clip(currentStationIdx, currentParaIdx);
+        }, startDelay);
+      } else {
+        const fullText = getParagraphText(currentStationIdx, currentParaIdx);
+        sentenceQueue = splitIntoSentences(fullText);
+        currentSentenceIdx = 0;
+        pauseTimer = setTimeout(() => {
+          speakNextSentence();
+        }, startDelay);
+      }
+    }
+
+    function playNeuralMp3Clip(sIdx, pIdx) {
+      if (!isPlaying || isPaused) return;
+
+      const mp3Path = `audio_ru/st${sIdx}_p${pIdx}.mp3`;
+      neuralAudio.src = mp3Path;
+      applyAudioElementParams();
+
+      neuralAudio.onended = () => {
+        if (!isPlaying || isPaused) return;
+        // Фирменная драматическая пауза Минаева между абзацами (1.15 сек)
+        pauseTimer = setTimeout(() => {
+          advanceToNextParagraphAuto();
+        }, 1150);
+      };
+
+      neuralAudio.onerror = () => {
+        // Если локальный MP3 ещё не найден, переключаемся на мужской Web Speech
+        console.warn("MP3 clip not found, falling back to Web Speech:", mp3Path);
+        const fullText = getParagraphText(sIdx, pIdx);
+        sentenceQueue = splitIntoSentences(fullText);
+        currentSentenceIdx = 0;
+        speakNextSentence();
+      };
+
+      neuralAudio.play().catch(err => {
+        console.warn("Audio play interrupted:", err);
+      });
+    }
+
+    function speakNextSentence() {
+      if (!isPlaying || isPaused) return;
+
+      if (currentSentenceIdx >= sentenceQueue.length) {
+        pauseTimer = setTimeout(() => {
+          advanceToNextParagraphAuto();
+        }, 1250);
+        return;
+      }
+
+      const sentenceText = sentenceQueue[currentSentenceIdx];
+      const utterance = new SpeechSynthesisUtterance(sentenceText);
+
+      utterance.lang = voiceConfig.lang;
+      utterance.pitch = Math.min(0.85, voiceConfig.pitch);
+      utterance.rate = voiceConfig.rate;
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+
+      utterance.onend = () => {
+        if (!isPlaying || isPaused) return;
+        currentSentenceIdx++;
+        pauseTimer = setTimeout(() => {
+          speakNextSentence();
+        }, 240);
+      };
+
+      utterance.onerror = (ev) => {
+        if (ev.error === "interrupted" || ev.error === "canceled") return;
+        currentSentenceIdx++;
+        speakNextSentence();
+      };
+
+      synth.speak(utterance);
+    }
+
+    function advanceToNextParagraphAuto() {
+      const totalP = getTotalParagraphs(currentStationIdx);
+      if (currentParaIdx + 1 < totalP) {
+        playStation(currentStationIdx, currentParaIdx + 1, false);
+      } else {
+        isPlaying = false;
+        isPaused = false;
+        updatePlayerIcons();
+        const st = stationsData[currentStationIdx];
+        document.getElementById("playerStationLabel").textContent =
+          `✓ Станция ${st.number} завершена • Переход к следующей точке`;
+      }
+    }
+
+    function startFullTour() {
+      playStation(0, 0, true);
+    }
+
+    function togglePlayPause() {
+      if (!isPlaying) {
+        playStation(currentStationIdx, currentParaIdx, currentParaIdx === 0);
+        return;
+      }
+
+      if (isPaused) {
+        isPaused = false;
+        updatePlayerIcons();
+        if (engineMode === "neural_mp3") {
+          neuralAudio.play();
+        } else if (synth && synth.paused) {
+          synth.resume();
+        } else {
+          speakNextSentence();
+        }
+      } else {
+        isPaused = true;
+        updatePlayerIcons();
+        if (pauseTimer) {
+          clearTimeout(pauseTimer);
+          pauseTimer = null;
+        }
+        if (engineMode === "neural_mp3") {
+          neuralAudio.pause();
+        } else if (synth) {
+          synth.cancel();
+        }
+      }
+    }
+
+    function stopAudio() {
+      clearTimersAndSpeech();
+      isPlaying = false;
+      isPaused = false;
+      updatePlayerIcons();
+      document.querySelectorAll(".paragraph-block").forEach(el => {
+        el.classList.remove("speaking-active");
+      });
+      document.getElementById("playerStationLabel").textContent =
+        `Остановлено • Станция ${currentStationIdx + 1}`;
+    }
+
+    function nextParagraph() {
+      const totalP = getTotalParagraphs(currentStationIdx);
+      if (currentParaIdx + 1 < totalP) {
+        playStation(currentStationIdx, currentParaIdx + 1, false);
+      } else if (currentStationIdx + 1 < stationsData.length) {
+        playStation(currentStationIdx + 1, 0, true);
+      }
+    }
+
+    function prevParagraph() {
+      if (currentParaIdx > 0) {
+        playStation(currentStationIdx, currentParaIdx - 1, false);
+      } else if (currentStationIdx > 0) {
+        const prevSt = currentStationIdx - 1;
+        playStation(prevSt, getTotalParagraphs(prevSt) - 1, false);
+      }
+    }
+
+    function nextStation() {
+      const nextSt = (currentStationIdx + 1) % stationsData.length;
+      playStation(nextSt, 0, true);
+    }
+
+    function prevStation() {
+      const prevSt = (currentStationIdx - 1 + stationsData.length) % stationsData.length;
+      playStation(prevSt, 0, true);
+    }
+
+    function seekParagraph(event) {
+      const bar = event.currentTarget;
+      const rect = bar.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      const totalP = getTotalParagraphs(currentStationIdx);
+      const targetP = Math.min(totalP - 1, Math.floor(ratio * totalP));
+      playStation(currentStationIdx, targetP, false);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderStations();
+      loadVoices();
+    });
+  </script>
+</body>
+</html>
